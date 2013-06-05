@@ -2,11 +2,19 @@ package edu.ucsb.cs56.projects.utilities.calculator;
 
 import java.lang.NumberFormatException;
 
+@author Sam Dowell
+/**
+   This class represents the portion of the calculator that does all of the computations, and sends it to the screen.
+ */
 class Calculator {
 
 	private String left, operator, right;
 	private boolean onRightSide; // true if appending to right side of expression, false if appending to left side
 	private JLabelMessageDestination display;
+    /**
+       Constructor
+       @param display The JLabelMessageDestination to send the operations and results to
+     */
 	public Calculator(JLabelMessageDestination display){
 		left = "";
 		operator = "";
@@ -15,6 +23,9 @@ class Calculator {
 		this.display = display;
 		refresh();
 	}
+    /**
+       Call this method with a String to have the calculator do some operation (i.e. appending a digit to the current number, or appending an operator to the expression)
+     */
 	public void append(String s){
 		if(s.equals("Enter")){
 			operate();
@@ -41,6 +52,9 @@ class Calculator {
 		refresh();
 
 	}
+    /**
+       Refresh the display to update it to the current state of the expression
+     */
 	public void refresh(){
 		if(onRightSide)
 			display.append(left + " " + operator + " " + right + "|");
@@ -48,6 +62,9 @@ class Calculator {
 			display.append(left + "| " + operator + " " + right);
 
 	}
+    /**
+       Clear out the expression and refresh the display
+     */
 	public void clear(){
 		left = "";
 		operator = "";
@@ -55,6 +72,9 @@ class Calculator {
 		onRightSide = false;
 		refresh();
 	}
+    /**
+       Delete the rightmost character in the expression. Called by using backspace or clicking the Delete button
+     */
 	public void delete(){
 		if(onRightSide){
 			if(right.equals("")){
@@ -68,6 +88,9 @@ class Calculator {
 				left = left.substring(0,left.length() - 1);
 		}
 	}
+    /**
+       Operate on the current expression and display the result
+     */
 	public void operate(){
 		double result = 0.0;
 		try{
