@@ -3,26 +3,30 @@ import java.awt.GridLayout;
 import javax.swing.JComponent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event. ActionEvent;
+import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.util.ArrayList;
 import javax.swing.JTextArea;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+public class Keypad extends JComponent implements KeyListener{
 
-public class Keypad extends JComponent{
+	private Calculator calculator;
+	
 
-	//private Calculator calculator;
-	//private MessageDestination display;
-
-
-	public Keypad(/*Calculator calc, MessageDestination disp*/){
+	public Keypad(Calculator calc){
 		super();
-		//display = disp;
-		//calculator = calc;
-		
 
-		this.setLayout(new GridLayout(4,0));
+		calculator = calc;
+		setFocusable(true);
+		addKeyListener(this);
+		this.setLayout(new GridLayout(0,4));
 
+		makeButton("Clear");
+		makeButton("");
+		makeButton("");
+		makeButton("Delete");
 		makeButton("7");
 		makeButton("8");
 		makeButton("9");
@@ -48,53 +52,53 @@ public class Keypad extends JComponent{
 		jb.addActionListener(new ButtonListener(s));
 		this.add(jb);
 	}
-
-   class ButtonListener implements ActionListener {
+	private void resetFocus(){
+		setFocusable(true);
+		requestFocusInWindow();
+	}
+   class ButtonListener implements ActionListener{
 	private String num;
 
 	public ButtonListener(String s) {
 	    super();  // is this line necessary? what does it do?
 	    this.num = s;
+
 	}
 
 	public void actionPerformed (ActionEvent event) {
-/*
-	    char turn=game.getTurn();
-	    if (turn==' ')
-		return;
-	    if (!game.isBlank(num)) {
-		md.append("That square is already occupied!\n");
-		return;
-	    }
-	    if (mdTurn != null) {
-		String turnMessage;
-		if(turn == 'X')
-			turnMessage = "O's turn";
-		else if (turn == 'O')
-			turnMessage = "X's turn";
-		else
-			turnMessage = "Game Over";
-              mdTurn.append(turnMessage);
- 	    }
-	    char winner=game.move(num);
-	    JButton jb = buttons[num];
-	    jb.setFont(new Font("sansserif",Font.BOLD,36));
-	    jb.setText(Character.toString(turn)); // this is how we convert char to String
-
-	    // check for a winner
-	    if (winner=='D'){
-		if(mdTurn != null)
-		    mdTurn.append("");
-		md.append("Phooey.  It's a draw.\n");
-	    }
-	    else if (winner!=' '){
-		if(mdTurn != null)
-		    mdTurn.append("");
-		md.append(winner + " wins!\n");
-	    }
-	*/
+		calculator.append(num);
+		resetFocus();
+		
 	}
+
+
     }
 
+    @Override
+    public void keyReleased(KeyEvent ke){}
+    @Override
+    public void keyTyped(KeyEvent ke){}
+    @Override
+    public void keyPressed(KeyEvent ke){
+	String key = java.awt.event.KeyEvent.getKeyText(ke.getKeyCode());
+	char k = ke.getKeyChar();
+	if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.')
+		calculator.append("" + k);
+	else if(k == 'c' || k == 'C')
+		calculator.append("Clear");
+	else if(key.equals("Enter") || key.equals("Equals"))
+		calculator.append("Enter");
+	else if(key.equals("NumPad +"))
+		calculator.append("+");
+	else if(key.equals("NumPad -"))
+		calculator.append("-");
+	else if(key.equals("NumPad *"))
+		calculator.append("*");
+	else if(key.equals("NumPad /"))
+		calculator.append("/");
+	else if(key.equals("Backspace"))
+		calculator.append("Delete");
+    }
+    
 
 }
