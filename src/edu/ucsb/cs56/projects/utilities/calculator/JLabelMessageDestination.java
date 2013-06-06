@@ -1,7 +1,7 @@
 package edu.ucsb.cs56.projects.utilities.calculator;
 import javax.swing.JLabel;
 /** 
-    An class to represent a JLabel to send messages to
+    A class to represent a JLabel to send messages to
     @author Sam Dowell
  */
 public class JLabelMessageDestination extends JLabel  {
