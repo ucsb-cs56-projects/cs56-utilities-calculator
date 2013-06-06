@@ -15,7 +15,7 @@ import java.awt.Dimension;
 /** CalculatorGUI.java is a GUI interface for a Calculator
 
      @author Sam Dowell
-     @version CS56, Spring 2011, UCSB
+     @version CS56, Spring 2013, UCSB
 */
 
 

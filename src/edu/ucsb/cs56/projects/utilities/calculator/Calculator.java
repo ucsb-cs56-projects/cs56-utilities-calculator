@@ -2,9 +2,10 @@ package edu.ucsb.cs56.projects.utilities.calculator;
 
 import java.lang.NumberFormatException;
 
-@author Sam Dowell
+
 /**
    This class represents the portion of the calculator that does all of the computations, and sends it to the screen.
+   @author Sam Dowell
  */
 class Calculator {
 

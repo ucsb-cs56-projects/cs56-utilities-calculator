@@ -10,11 +10,18 @@ import javax.swing.JTextArea;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+	Keypad is a class to represent a keypad which sends signals to a calculator
+	@author Sam Dowell
+*/
 public class Keypad extends JComponent implements KeyListener{
 
 	private Calculator calculator;
 	
-
+/**
+	Constructor
+	@param calc Takes a Calculator object as an argument, to send signals to
+*/
 	public Keypad(Calculator calc){
 		super();
 
@@ -46,16 +53,25 @@ public class Keypad extends JComponent implements KeyListener{
 
 
 	}
-
+/**
+	Helper method that initializes the JButtons for the GUI
+	@param s String representation of what signal the button will send
+*/
 	private void makeButton(String s){
 		JButton jb = new JButton(s);
 		jb.addActionListener(new ButtonListener(s));
 		this.add(jb);
 	}
+/**
+	Helper method to ensure that this window has the focus
+*/
 	private void resetFocus(){
 		setFocusable(true);
 		requestFocusInWindow();
 	}
+/**
+	Inner class that implements an ActionListener to handle button presses
+*/
    class ButtonListener implements ActionListener{
 	private String num;
 
