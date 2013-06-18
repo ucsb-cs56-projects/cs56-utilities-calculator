@@ -77,7 +77,7 @@
     <delete dir="javadoc" failonerror="false" verbose="true" />  <!-- the local copy -->
     <mkdir dir="javadoc" />
   </target>
-  <target name="run" description="run the calculator program">
+  <target name="run" depends="compile" description="run the calculator program">
   <java classpath="build" classname="edu.ucsb.cs56.projects.utilities.calculator.CalculatorGUI" fork="true">
   </java>
   </target>
