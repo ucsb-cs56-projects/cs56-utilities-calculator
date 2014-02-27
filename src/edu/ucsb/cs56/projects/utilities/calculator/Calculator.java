@@ -250,80 +250,32 @@ class Calculator {
                 else
                 {
                     if (tempOp.equals("sqrt"))
-                    {
                         result = Math.sqrt(Double.parseDouble(tempR));
-                        /*System.out.println(result);
-                        clear();
-                        left = "" + result;
-                        refresh();
-                        onRightSide = false;*/
-                    }
-                    
                     else if (tempOp.equals("sin"))
-                    {
                         result = Math.sin(Math.toRadians(Double.parseDouble(tempR)));
-                        /*System.out.println(result);
-                        clear();
-                        left = "" + result;
-                        refresh();
-                        onRightSide = false;*/
-                    }
-                    
                     else if (tempOp.equals("cos"))
-                    {
                         result = Math.cos(Math.toRadians(Double.parseDouble(tempR)));
-                        /*System.out.println(result);
-                        clear();
-                        left = "" + result;
-                        refresh();
-                        onRightSide = false;*/
-                    }
                 }
                 
             }
             else
             {
-                if(tempOp.equals("+")){
+                if(tempOp.equals("+"))
                     result = Double.parseDouble(tempL) + Double.parseDouble(tempR);
-                    /*clear();
-                    left = "" + result;
-                    refresh();
-                    onRightSide = false;*/
-                }
-                else if (tempOp.equals("-")){
+                else if (tempOp.equals("-"))
                     result = Double.parseDouble(tempL) - Double.parseDouble(tempR);
-                    /*clear();
-                    left = "" + result;
-                    refresh();
-                    onRightSide = false;*/
-                }
-                else if (tempOp.equals("*")){
+                else if (tempOp.equals("*"))
                     result = Double.parseDouble(tempL) * Double.parseDouble(tempR);
-                    /*clear();
-                    left = "" + result;
-                    refresh();
-                    onRightSide = false;*/
-                }
                 else if (tempOp.equals("/")){
-                    if (Double.parseDouble(tempR) != 0){
+                    if (Double.parseDouble(tempR) != 0)
                         result = Double.parseDouble(tempL) / Double.parseDouble(tempR);
-                        /*clear();
-                        left = "" + result;
-                        refresh();
-                        onRightSide = false;*/
-                    } else
+                    else
                         display.append("Error: Divide by zero");
                 }
                 else if (tempOp.equals("^"))
                 {
                     if (Double.parseDouble(tempR) == 0)
-                    {
                         result = 1.0;
-                        /*clear();
-                        left += "" + result;
-                        refresh();
-                        onRightSide = false;*/
-                    }
                     else if (Double.parseDouble(tempR) < 0)
                     {
                         double newLeft = 1 / Double.parseDouble(tempL);
@@ -332,11 +284,6 @@ class Calculator {
                         {
                             result = result * result;
                         }
-                        /*clear();
-                        left += "" + result;
-                        refresh();
-                        onRightSide = false;*/
-                        
                     }
                     else
                     {
@@ -345,10 +292,6 @@ class Calculator {
                         {
                             result *= result;
                         }
-                        /*clear();
-                        left += "" + result;
-                        refresh();
-                        onRightSide = false;*/
                     }
                 }
                 
