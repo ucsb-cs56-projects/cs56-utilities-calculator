@@ -11,7 +11,7 @@ import java.lang.Math;
 class Calculator {
 
 	private String left, operator, right, tempL, tempOp, tempR;
-	private boolean onRightSide, isInParenthesis, hasParenthesis; // true if appending to right side of expression, false if appending to left side
+	private boolean onRightSide, isInParenthesis, hasParenthesis, parenRight; // true if appending to right side of expression, false if appending to left side
 	private JLabelMessageDestination display;
     private int locationOfParen; //where is the parenthesis, on the left = 0, on the right = 1;
     /**
@@ -22,9 +22,13 @@ class Calculator {
 		left = "";
 		operator = "";
 		right = "";
+        tempL = "";
+        tempOp = "";
+        tempR = "";
 		onRightSide = false;
         isInParenthesis = false;
         hasParenthesis = false;
+        parenRight = false;
         locationOfParen = 0;
 		this.display = display;
 		refresh();
@@ -34,36 +38,71 @@ class Calculator {
      */
 	public void append(String s){
 		System.out.println("S = " + s);
-        System.out.println(isInParenthesis);
+        //System.out.println(isInParenthesis);
         if(s.equals("Enter")){
 			operate();
 			return;
 		}
         if (isInParenthesis)
         {
+            if (onRightSide)
+                right = right + s;
+            else
+                left = left + s;
             if (s.equals(")"))
             {
                 isInParenthesis = false;
                 //System.out.println("bool here is: " + isInParenthesis);
-                if (onRightSide)
+                /*if (onRightSide)
                 {
                     right = right + s;
                     //onRightSide = false;
-                }
-                else
-                {
-                    left = left + s;
+                }*/
+                if (!onRightSide)
                     onRightSide = true;
-                }
             }
             else if (s.equals("Clear"))
                 clear();
             else if (s.equals("Delete"))
                 delete();
-            else if (onRightSide)
-                right = right + s;
+            else if (s.equals("cos") && !parenRight && tempL.equals(""))
+            {
+                tempL = tempL + "";
+                if(tempOp.equals("") || tempR.equals("")){
+                    tempOp = s;
+                    parenRight = true;
+                }
+            }
+            else if (s.equals("sin") && !parenRight && tempL.equals(""))
+            {
+                tempL = tempL + "";
+                if(tempOp.equals("") || tempR.equals("")){
+                    tempOp = s;
+                    parenRight = true;
+                }
+            }
+            else if (s.equals("sqrt") && !parenRight && tempL.equals(""))
+            {
+                tempL = tempL + "";
+                if(tempOp.equals("") || tempR.equals("")){
+                    tempOp = s;
+                    parenRight = true;
+                }
+            }
+            else if(s.equals("-") && !parenRight && tempL.equals(""))
+                tempL = tempL + s;
+            else if(s.equals("-") && parenRight && !tempOp.equals("") && tempR.equals(""))
+                tempR = tempR + s;
+            else if(s.equals("*") || s.equals("+") || s.equals("-") || s.equals("/") || s.equals("^")){
+                if(tempOp.equals("") || tempR.equals("")){
+                    tempOp = s;
+                    parenRight = true;
+                }
+            }
+            else if (parenRight)
+                tempR = tempR + s;
             else
-                left = left + s;
+                tempL = tempL + s;
         }
         else
         {
@@ -142,15 +181,16 @@ class Calculator {
        Clear out the expression and refresh the display
      */
 	public void clear(){
-		System.out.println("left is: " + left);
-        System.out.println("right is: " + right);
-        System.out.println("operator is: " + operator);
         left = "";
 		operator = "";
 		right = "";
+        tempL = "";
+        tempOp = "";
+        tempR = "";
 		onRightSide = false;
         isInParenthesis = false;
         hasParenthesis = false;
+        parenRight = false;
         locationOfParen = 0;
 		refresh();
 	}
@@ -197,63 +237,187 @@ class Calculator {
     /**
        Operate on the current expression and display the result
      */
+    
+    public void calculateParenthesis()
+    {
+        double result = 0.0;
+        try
+        {
+            if(tempL.equals(""))
+            {
+                if (tempOp.equals("") || tempR.equals(""))
+                    return;
+                else
+                {
+                    if (tempOp.equals("sqrt"))
+                    {
+                        result = Math.sqrt(Double.parseDouble(tempR));
+                        /*System.out.println(result);
+                        clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                    }
+                    
+                    else if (tempOp.equals("sin"))
+                    {
+                        result = Math.sin(Math.toRadians(Double.parseDouble(tempR)));
+                        /*System.out.println(result);
+                        clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                    }
+                    
+                    else if (tempOp.equals("cos"))
+                    {
+                        result = Math.cos(Math.toRadians(Double.parseDouble(tempR)));
+                        /*System.out.println(result);
+                        clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                    }
+                }
+                
+            }
+            else
+            {
+                if(tempOp.equals("+")){
+                    result = Double.parseDouble(tempL) + Double.parseDouble(tempR);
+                    /*clear();
+                    left = "" + result;
+                    refresh();
+                    onRightSide = false;*/
+                }
+                else if (tempOp.equals("-")){
+                    result = Double.parseDouble(tempL) - Double.parseDouble(tempR);
+                    /*clear();
+                    left = "" + result;
+                    refresh();
+                    onRightSide = false;*/
+                }
+                else if (tempOp.equals("*")){
+                    result = Double.parseDouble(tempL) * Double.parseDouble(tempR);
+                    /*clear();
+                    left = "" + result;
+                    refresh();
+                    onRightSide = false;*/
+                }
+                else if (tempOp.equals("/")){
+                    if (Double.parseDouble(tempR) != 0){
+                        result = Double.parseDouble(tempL) / Double.parseDouble(tempR);
+                        /*clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                    } else
+                        display.append("Error: Divide by zero");
+                }
+                else if (tempOp.equals("^"))
+                {
+                    if (Double.parseDouble(tempR) == 0)
+                    {
+                        result = 1.0;
+                        /*clear();
+                        left += "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                    }
+                    else if (Double.parseDouble(tempR) < 0)
+                    {
+                        double newLeft = 1 / Double.parseDouble(tempL);
+                        result = newLeft;
+                        for (int i = 0; i < ((-1) *Double.parseDouble(tempR)) - 1; i++)
+                        {
+                            result = result * result;
+                        }
+                        /*clear();
+                        left += "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                        
+                    }
+                    else
+                    {
+                        result = Double.parseDouble(tempL);
+                        for (int i = 0; i < Double.parseDouble(tempR) - 1; i++)
+                        {
+                            result *= result;
+                        }
+                        /*clear();
+                        left += "" + result;
+                        refresh();
+                        onRightSide = false;*/
+                    }
+                }
+                
+            }
+            if (locationOfParen == 0)
+                left = Double.toString(result);
+            else
+                right = Double.toString(result);
+        }
+        catch(NumberFormatException nfe)
+        {
+			display.append("Error: Number Formatting");
+		}
+    }
+    
 	public void operate(){
 		double result = 0.0;
-		try{
+        System.out.println("right is: " + right);
+        System.out.println("left is: " + left);
+        System.out.println("operator is: " + operator);
+        System.out.println("parenLeft = " + tempL);
+        System.out.println("parenRight = " + tempR);
+        System.out.println("parenOperator = " + tempOp);
+		try
+        {
             if (hasParenthesis)
             {
-                if (locationOfParen == 0) //parenthesis on the left
-                {
-                    
-                }
-                else  //parenthesis on the left
-                {
-                    
-                }
+                calculateParenthesis();
             }
-            else
+            if(left.equals(""))
             {
-                if(left.equals(""))
+                if (operator.equals("") || right.equals(""))
+                    return;
+                else
+                {
+                    if (operator.equals("sqrt"))
                     {
-            if (operator.equals("") || right.equals(""))
-                return;
-            else
-            {
-                if (operator.equals("sqrt"))
-                {
-                    result = Math.sqrt(Double.parseDouble(right));
-                    System.out.println(result);
-                    clear();
-                    left = "" + result;
-                    refresh();
-                    onRightSide = false;
-                }
+                        result = Math.sqrt(Double.parseDouble(right));
+                        System.out.println(result);
+                        clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;
+                    }
                 
-                else if (operator.equals("sin"))
-                {
-                    result = Math.sin(Math.toRadians(Double.parseDouble(right)));
-                    System.out.println(result);
-                    clear();
-                    left = "" + result;
-                    refresh();
-                    onRightSide = false;
-                }
+                    else if (operator.equals("sin"))
+                    {
+                        result = Math.sin(Math.toRadians(Double.parseDouble(right)));
+                        System.out.println(result);
+                        clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;
+                    }
                 
-                else if (operator.equals("cos"))
-                {
-                    result = Math.cos(Math.toRadians(Double.parseDouble(right)));
-                    System.out.println(result);
-                    clear();
-                    left = "" + result;
-                    refresh();
-                    onRightSide = false;
+                    else if (operator.equals("cos"))
+                    {
+                        result = Math.cos(Math.toRadians(Double.parseDouble(right)));
+                        System.out.println(result);
+                        clear();
+                        left = "" + result;
+                        refresh();
+                        onRightSide = false;
+                    }
                 }
-
-            }
                 
         }
-                else
-                    {
+            else
+            {
 		if(operator.equals("+")){
 			result = Double.parseDouble(left) + Double.parseDouble(right);
 			clear();
@@ -324,10 +488,14 @@ class Calculator {
         }
         
         }
-            }
         }
-            catch(NumberFormatException nfe){
+            catch(NumberFormatException nfe)
+        {
 			display.append("Error: Number Formatting");
 		}
 	}
+
+
+
+
 }
