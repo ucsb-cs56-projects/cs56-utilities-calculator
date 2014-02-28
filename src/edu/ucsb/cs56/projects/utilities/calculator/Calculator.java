@@ -37,17 +37,21 @@ class Calculator {
        Call this method with a String to have the calculator do some operation (i.e. appending a digit to the current number, or appending an operator to the expression)
      */
 	public void append(String s){
-		System.out.println("S = " + s);
-        //System.out.println(isInParenthesis);
+		/*System.out.println("S = " + s);
+        System.out.println(isInParenthesis);*/
         if(s.equals("Enter")){
 			operate();
 			return;
 		}
         if (isInParenthesis)
         {
-            if (onRightSide)
+            /*if (s.equals("Clear"))
+                clear();
+            else if (s.equals("Delete"))
+                delete();*/
+            if (onRightSide && !s.equals("Delete"))
                 right = right + s;
-            else
+            else if (!onRightSide && !s.equals("Delete"))
                 left = left + s;
             if (s.equals(")"))
             {
@@ -199,33 +203,65 @@ class Calculator {
      */
 	public void delete(){
 		if(onRightSide){
-            //System.out.println("i am on the right");
-			if(right.equals("")){
+            if(right.equals("")){
 				operator = "";
 				onRightSide = false;
 			}
 			else
             {
                 char end = right.charAt(right.length() - 1);
-                System.out.println("end is " + end);
+                if (isInParenthesis)
+                {
+                    if (parenRight)
+                    {
+                        if (tempR.equals(""))
+                        {
+                            tempOp = "";
+                            parenRight = false;
+                        }
+                        else
+                            tempR = tempR.substring(0, tempR.length() - 1);
+                    }
+                    else
+                    {
+                        if (!tempL.equals(""))
+                            tempL = tempL.substring(0, tempL.length() - 1);
+                    }
+                }
                 if (end == '(')
                 {
-                    //System.out.println("begin parenthesis");
                     isInParenthesis = false;
                 }
                 else if (end == ')')
                     isInParenthesis = true;
+                System.out.println("subString is: " + right.substring(0, right.length() - 1));
                 right = right.substring(0, right.length() - 1);
             }
-		}else{
-            //System.out.println("I am not on the right");
-			if(!left.equals(""))
+        }
+        else{
+            if(!left.equals(""))
             {
+                if (isInParenthesis)
+                {
+                    if (parenRight)
+                    {
+                        if (tempR.equals(""))
+                        {
+                            tempOp = "";
+                            parenRight = false;
+                        }
+                        else
+                            tempR = tempR.substring(0, tempR.length() - 1);
+                    }
+                    else
+                    {
+                        if (!tempL.equals(""))
+                            tempL = tempL.substring(0, tempL.length() - 1);
+                    }
+                }
                 char end  = left.charAt(left.length() - 1);
-                System.out.println("end is " + end);
                 if (end == '(')
                 {
-                    //System.out.println("begin parenthesis second case");
                     isInParenthesis = false;
                 }
                 else if (end == ')')
@@ -234,9 +270,6 @@ class Calculator {
             }
 		}
 	}
-    /**
-       Operate on the current expression and display the result
-     */
     
     public void calculateParenthesis()
     {
@@ -306,16 +339,13 @@ class Calculator {
 			display.append("Error: Number Formatting");
 		}
     }
+    /**
+     Operate on the current expression and display the result
+     */
     
 	public void operate(){
 		double result = 0.0;
-        System.out.println("right is: " + right);
-        System.out.println("left is: " + left);
-        System.out.println("operator is: " + operator);
-        System.out.println("parenLeft = " + tempL);
-        System.out.println("parenRight = " + tempR);
-        System.out.println("parenOperator = " + tempOp);
-		try
+        try
         {
             if (hasParenthesis)
             {
