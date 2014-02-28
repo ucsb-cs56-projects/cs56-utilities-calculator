@@ -50,6 +50,12 @@ public class Keypad extends JComponent implements KeyListener{
 		makeButton(".");
 		makeButton("Enter");
 		makeButton("+");
+		makeButton("^");
+		makeButton("sqrt");
+		makeButton("sin");
+		makeButton("cos");
+		makeButton("(");
+		makeButton(")");
 
 
 	}
@@ -98,7 +104,7 @@ public class Keypad extends JComponent implements KeyListener{
     public void keyPressed(KeyEvent ke){
 	String key = java.awt.event.KeyEvent.getKeyText(ke.getKeyCode());
 	char k = ke.getKeyChar();
-	if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.')
+	if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.' || k == '^' || k == '(' || k == ')')
 		calculator.append("" + k);
 	else if(k == 'c' || k == 'C')
 		calculator.append("Clear");
@@ -114,7 +120,17 @@ public class Keypad extends JComponent implements KeyListener{
 		calculator.append("/");
 	else if(key.equals("Backspace"))
 		calculator.append("Delete");
+    else if (key.equals("NumPad ^"))
+        calculator.append("^");
+    else if (key.equals("sqrt"))
+        calculator.append("sqrt");
+    else if (key.equals("sin"))
+        calculator.append("sin");
+    else if (key.equals("cos"))
+        calculator.append("cos");
+    else if (key.equals(")Clear"))
+        calculator.append("Clear");
+    else if (key.equals(")Delete"))
+        calculator.append("Delete");
     }
-    
-
 }
