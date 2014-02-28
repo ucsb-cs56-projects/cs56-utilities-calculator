@@ -202,7 +202,9 @@ class Calculator {
        Delete the rightmost character in the expression. Called by using backspace or clicking the Delete button
      */
 	public void delete(){
-		if(onRightSide){
+		boolean isTempOp = false;
+        int opLength = 0;
+        if(onRightSide){
             if(right.equals("")){
 				operator = "";
 				onRightSide = false;
@@ -216,7 +218,9 @@ class Calculator {
                     {
                         if (tempR.equals(""))
                         {
+                            opLength = tempOp.length();
                             tempOp = "";
+                            isTempOp = true;
                             parenRight = false;
                         }
                         else
@@ -231,11 +235,15 @@ class Calculator {
                 if (end == '(')
                 {
                     isInParenthesis = false;
+                    hasParenthesis = false;
                 }
                 else if (end == ')')
                     isInParenthesis = true;
                 //System.out.println("subString is: " + right.substring(0, right.length() - 1));
-                right = right.substring(0, right.length() - 1);
+                if (isTempOp)
+                    right = right.substring(0,right.length() - opLength);
+                else
+                    right = right.substring(0, right.length() - 1);
             }
         }
         else{
@@ -247,7 +255,9 @@ class Calculator {
                     {
                         if (tempR.equals(""))
                         {
+                            opLength = tempOp.length();
                             tempOp = "";
+                            isTempOp = true;
                             parenRight = false;
                         }
                         else
@@ -263,10 +273,14 @@ class Calculator {
                 if (end == '(')
                 {
                     isInParenthesis = false;
+                    hasParenthesis = false;
                 }
                 else if (end == ')')
                     isInParenthesis = true;
-				left = left.substring(0,left.length() - 1);
+                if (isTempOp)
+                    left = left.substring(0,left.length() - opLength);
+                else
+                    left = left.substring(0,left.length() - 1);
             }
 		}
 	}
