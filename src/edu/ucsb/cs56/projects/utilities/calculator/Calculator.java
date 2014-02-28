@@ -234,7 +234,7 @@ class Calculator {
                 }
                 else if (end == ')')
                     isInParenthesis = true;
-                System.out.println("subString is: " + right.substring(0, right.length() - 1));
+                //System.out.println("subString is: " + right.substring(0, right.length() - 1));
                 right = right.substring(0, right.length() - 1);
             }
         }
