@@ -32,8 +32,8 @@ public class Keypad extends JComponent implements KeyListener{
 		this.setLayout(new GridLayout(0,4));
 
 		makeButton("Clear");
-		makeButton("");
-		makeButton("");
+		makeButton("<--");
+		makeButton("-->");
 		makeButton("Delete");
 		makeButton("7");
 		makeButton("8");
@@ -99,6 +99,12 @@ public class Keypad extends JComponent implements KeyListener{
                 jb.setContentAreaFilled(false);
                 jb.setOpaque(true);
             }
+            else if (s.equals("<--") || s.equals("-->"))
+            {
+                jb.setBackground(Color.YELLOW);
+                jb.setContentAreaFilled(false);
+                jb.setOpaque(true);
+            }
             else
             {
                 jb.setBackground(Color.CYAN);
@@ -147,6 +153,10 @@ public class Keypad extends JComponent implements KeyListener{
 	char k = ke.getKeyChar();
 	if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.' || k == '^' || k == '(' || k == ')')
 		calculator.append("" + k);
+    else if (key.equals("<--"))
+        calculator.append("<--");
+    else if (key.equals("-->"))
+        calculator.append("-->");
 	else if(k == 'c' || k == 'C')
 		calculator.append("Clear");
 	else if(key.equals("Enter") || key.equals("Equals"))
