@@ -22,4 +22,11 @@ how to use:
 2. unzip it and go to the top directory.
  
 3. in the command line window, type "ant run".
- 
+
+opeartion:
+
+ "sqrt": used java.math.sqrt here, every time there is a right opeartor, the sqrt function will call the java.math.sqrt function.
+ "cos":  used java.math.cos here, every time there is a right parameter, the cos function will call the java.math.cos
+ "sin":  used java.math.sin here, every time there is a right parameter, the cos function will call the java.math.sin
+ "^": used java.math.pow function, every time there is a left parameter and right parameter, the ^ function will call the java.math.pow
+ "(" ad ")": we set parameter to check the parentheses whether or not is complete.
