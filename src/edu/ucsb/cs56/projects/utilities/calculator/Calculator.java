@@ -2,6 +2,7 @@ package edu.ucsb.cs56.projects.utilities.calculator;
 
 import java.lang.NumberFormatException;
 import java.lang.Math;
+import java.util.ArrayList;
 
 
 /**
@@ -13,7 +14,8 @@ class Calculator {
 	private String left, operator, right, tempL, tempOp, tempR;
 	private boolean onRightSide, isInParenthesis, hasParenthesis, parenRight; // true if appending to right side of expression, false if appending to left side
 	private JLabelMessageDestination display;
-    private int locationOfParen; //where is the parenthesis, on the left = 0, on the right = 1;
+    private int locationOfParen, counter;//where is the parenthesis, on the left = 0, on the right = 1;
+    private ArrayList<String> resultString;
     /**
        Constructor
        @param display The JLabelMessageDestination to send the operations and results to
@@ -25,11 +27,13 @@ class Calculator {
         tempL = "";
         tempOp = "";
         tempR = "";
+        resultString = new ArrayList<String>();
 		onRightSide = false;
         isInParenthesis = false;
         hasParenthesis = false;
         parenRight = false;
         locationOfParen = 0;
+        counter = 0;
 		this.display = display;
 		refresh();
 	}
@@ -43,6 +47,18 @@ class Calculator {
 			operate();
 			return;
 		}
+        if (s.equals("<--"))
+        {
+            counter -= 1;
+            goBack();
+            return;
+        }
+        if (s.equals("-->"))
+        {
+            counter += 1;
+            goNext();
+            return;
+        }
         if (isInParenthesis)
         {
             /*if (s.equals("Clear"))
@@ -170,6 +186,69 @@ class Calculator {
 		refresh();
     }
 	
+    public void goBack()
+    {
+        System.out.println(counter);
+        if (counter >= resultString.size())
+        {
+            counter = resultString.size();
+            clear();
+            refresh();
+            display.append(resultString.get(counter - 1));
+            return;
+        }
+        if (counter < 0)
+        {
+            counter = 0;
+            clear();
+            refresh();
+            display.append(resultString.get(counter));
+            return;
+        }
+        if (resultString.size() < 1)
+        {
+            counter = 0;
+            return;
+        }
+        else
+        {
+            clear();
+            refresh();
+            display.append(resultString.get(counter));
+        }
+    }
+    
+    public void goNext()
+    {
+        System.out.println(counter);
+        if (counter >= resultString.size())
+        {
+            counter = resultString.size();
+            clear();
+            refresh();
+            display.append(resultString.get(counter - 1));
+            return;
+        }
+        if (counter < 0)
+        {
+            counter = 0;
+            clear();
+            refresh();
+            display.append(resultString.get(counter));
+            return;
+        }
+        if (resultString.size() < 1)
+        {
+            counter = 0;
+            return;
+        }
+        else
+        {
+            clear();
+            refresh();
+            display.append(resultString.get(counter));
+        }
+    }
         
     /**
        Refresh the display to update it to the current state of the expression
@@ -359,10 +438,16 @@ class Calculator {
     
 	public void operate(){
 		double result = 0.0;
+        String resultS = "";
+        String paren = "";
         try
         {
             if (hasParenthesis)
             {
+                if (locationOfParen == 0)
+                    paren += left;
+                else
+                    paren += right;
                 calculateParenthesis();
             }
             if(left.equals(""))
@@ -375,6 +460,19 @@ class Calculator {
                     {
                         result = Math.sqrt(Double.parseDouble(right));
                         System.out.println(result);
+                        if (!hasParenthesis)
+                        {
+                            resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                        }
+                        else
+                        {
+                            if (locationOfParen == 0)
+                                resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                            else
+                                resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                        }
+                        resultString.add(resultS);
+                        counter = resultString.size();
                         clear();
                         left = "" + result;
                         refresh();
@@ -385,6 +483,19 @@ class Calculator {
                     {
                         result = Math.sin(Math.toRadians(Double.parseDouble(right)));
                         System.out.println(result);
+                        if (!hasParenthesis)
+                        {
+                            resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                        }
+                        else
+                        {
+                            if (locationOfParen == 0)
+                                resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                            else
+                                resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                        }
+                        resultString.add(resultS);
+                        counter = resultString.size();
                         clear();
                         left = "" + result;
                         refresh();
@@ -395,6 +506,19 @@ class Calculator {
                     {
                         result = Math.cos(Math.toRadians(Double.parseDouble(right)));
                         System.out.println(result);
+                        if (!hasParenthesis)
+                        {
+                            resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                        }
+                        else
+                        {
+                            if (locationOfParen == 0)
+                                resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                            else
+                                resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                        }
+                        resultString.add(resultS);
+                        counter = resultString.size();
                         clear();
                         left = "" + result;
                         refresh();
@@ -407,6 +531,19 @@ class Calculator {
             {
 		if(operator.equals("+")){
 			result = Double.parseDouble(left) + Double.parseDouble(right);
+            if (!hasParenthesis)
+            {
+                resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+            }
+            else
+            {
+                if (locationOfParen == 0)
+                    resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                else
+                    resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+            }
+            resultString.add(resultS);
+            counter = resultString.size();
 			clear();
 			left = "" + result;
 			refresh();
@@ -414,6 +551,19 @@ class Calculator {
 		}
 		else if (operator.equals("-")){
 			result = Double.parseDouble(left) - Double.parseDouble(right);
+            if (!hasParenthesis)
+            {
+                resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+            }
+            else
+            {
+                if (locationOfParen == 0)
+                    resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                else
+                    resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+            }
+            resultString.add(resultS);
+            counter = resultString.size();
 			clear();
 			left = "" + result;
 			refresh();
@@ -421,6 +571,19 @@ class Calculator {
 		}
 		else if (operator.equals("*")){
 			result = Double.parseDouble(left) * Double.parseDouble(right);
+            if (!hasParenthesis)
+            {
+                resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+            }
+            else
+            {
+                if (locationOfParen == 0)
+                    resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                else
+                    resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+            }
+            resultString.add(resultS);
+            counter = resultString.size();
 			clear();
 			left = "" + result;
 			refresh();
@@ -429,18 +592,59 @@ class Calculator {
 		else if (operator.equals("/")){
 			if (Double.parseDouble(right) != 0){
 				result = Double.parseDouble(left) / Double.parseDouble(right);
+                if (!hasParenthesis)
+                {
+                    resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                }
+                else
+                {
+                    if (locationOfParen == 0)
+                        resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                    else
+                        resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                }
+                resultString.add(resultS);
+                counter = resultString.size();
 				clear();
 				left = "" + result;
 				refresh();
 				onRightSide = false;
-			} else 
+			} else
+            {
+                if (!hasParenthesis)
+                {
+                    resultS += left + " " + operator + " " + right + " = Error:Divide by zero";
+                }
+                else
+                {
+                    if (locationOfParen == 0)
+                        resultS = paren + " " + operator + " " + right + " = Error:Divide by zero";
+                    else
+                        resultS = left + " " + operator + " " + paren + " = Error:Divide by zero";
+                }
+                resultString.add(resultS);
+                counter = resultString.size();
 				display.append("Error: Divide by zero");
+            }
 		}
         else if (operator.equals("^"))
         {
             if (Double.parseDouble(right) == 0)
             {
                 result = 1.0;
+                if (!hasParenthesis)
+                {
+                    resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                }
+                else
+                {
+                    if (locationOfParen == 0)
+                        resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                    else
+                        resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                }
+                resultString.add(resultS);
+                counter = resultString.size();
                 clear();
                 left += "" + result;
                 refresh();
@@ -454,6 +658,19 @@ class Calculator {
                 {
                     result = result * result;
                 }
+                if (!hasParenthesis)
+                {
+                    resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                }
+                else
+                {
+                    if (locationOfParen == 0)
+                        resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                    else
+                        resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                }
+                resultString.add(resultS);
+                counter = resultString.size();
                 clear();
                 left += "" + result;
                 refresh();
@@ -467,6 +684,19 @@ class Calculator {
                 {
                     result *= result;
                 }
+                if (!hasParenthesis)
+                {
+                    resultS += left + " " + operator + " " + right + " = " + String.valueOf(result);
+                }
+                else
+                {
+                    if (locationOfParen == 0)
+                        resultS = paren + " " + operator + " " + right + " = " + String.valueOf(result);
+                    else
+                        resultS = left + " " + operator + " " + paren + " = " + String.valueOf(result);
+                }
+                resultString.add(resultS);
+                counter = resultString.size();
                 clear();
                 left += "" + result;
                 refresh();
