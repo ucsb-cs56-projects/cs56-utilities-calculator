@@ -30,10 +30,10 @@ public class Keypad extends JComponent implements KeyListener{
 		addKeyListener(this);
 		this.setLayout(new GridLayout(0,4));
 
-		makeButton("Clear");
+		makeButton("Clear", () -> this.calculator.clear());
 		makeButton("");
 		makeButton("");
-		makeButton("Delete");
+		makeButton("Delete", () -> this.calculator.delete());
 		makeButton("7");
 		makeButton("8");
 		makeButton("9");
@@ -48,10 +48,8 @@ public class Keypad extends JComponent implements KeyListener{
 		makeButton("-");
 		makeButton("0");
 		makeButton(".");
-		makeButton("Enter");
+		makeButton("Enter", () -> this.calculator.operate());
 		makeButton("+");
-
-
 	}
 /**
 	Helper method that initializes the JButtons for the GUI
@@ -60,6 +58,11 @@ public class Keypad extends JComponent implements KeyListener{
 	private void makeButton(String s){
 		JButton jb = new JButton(s);
 		jb.addActionListener(new ButtonListener(s));
+		this.add(jb);
+	}
+	private void makeButton(String s, Runnable func){
+		JButton jb = new JButton(s);
+		jb.addActionListener(new ButtonListener(s, func));
 		this.add(jb);
 	}
 /**
@@ -73,48 +76,51 @@ public class Keypad extends JComponent implements KeyListener{
 	Inner class that implements an ActionListener to handle button presses
 */
    class ButtonListener implements ActionListener{
-	private String num;
+		private String num;
+		private Runnable func;
 
-	public ButtonListener(String s) {
-	    super();  // is this line necessary? what does it do?
-	    this.num = s;
+		public ButtonListener(String s) {
+			super();  // is this line necessary? what does it do?
+			this.num = s;
+			this.func = () -> calculator.append(num);
+		}
 
-	}
+		public ButtonListener(String s, Runnable func) {
+			super();  // is this line necessary? what does it do?
+			this.num = s;
+			this.func = func;
+		}
 
-	public void actionPerformed (ActionEvent event) {
-		calculator.append(num);
-		resetFocus();
-		
-	}
-
-
+		public void actionPerformed (ActionEvent event) {
+			this.func.run();
+			resetFocus();
+		}
     }
 
-    @Override
-    public void keyReleased(KeyEvent ke){}
-    @Override
-    public void keyTyped(KeyEvent ke){}
-    @Override
-    public void keyPressed(KeyEvent ke){
+    @Override public void keyReleased(KeyEvent ke){}
+    @Override public void keyTyped(KeyEvent ke){}
+
+	/**
+		Handles keyboard buttons
+	*/
+    @Override public void keyPressed(KeyEvent ke){
 	String key = java.awt.event.KeyEvent.getKeyText(ke.getKeyCode());
-	char k = ke.getKeyChar();
-	if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.')
-		calculator.append("" + k);
-	else if(k == 'c' || k == 'C')
-		calculator.append("Clear");
-	else if(key.equals("Enter") || key.equals("Equals"))
-		calculator.append("Enter");
-	else if(key.equals("NumPad +"))
-		calculator.append("+");
-	else if(key.equals("NumPad -"))
-		calculator.append("-");
-	else if(key.equals("NumPad *"))
-		calculator.append("*");
-	else if(key.equals("NumPad /"))
-		calculator.append("/");
-	else if(key.equals("Backspace"))
-		calculator.append("Delete");
-    }
-    
-
+		char k = ke.getKeyChar();
+		if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.')
+			calculator.append("" + k);
+		else if(k == 'c' || k == 'C')
+			calculator.clear();
+		else if(key.equals("Enter") || key.equals("Equals"))
+			calculator.operate();
+		else if(key.equals("NumPad +"))
+			calculator.append("+");
+		else if(key.equals("NumPad -"))
+			calculator.append("-");
+		else if(key.equals("NumPad *"))
+			calculator.append("*");
+		else if(key.equals("NumPad /"))
+			calculator.append("/");
+		else if(key.equals("Backspace"))
+			calculator.delete();
+		}
 }

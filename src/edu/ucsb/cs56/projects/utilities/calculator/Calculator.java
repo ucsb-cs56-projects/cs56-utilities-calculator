@@ -28,15 +28,7 @@ class Calculator {
        Call this method with a String to have the calculator do some operation (i.e. appending a digit to the current number, or appending an operator to the expression)
      */
 	public void append(String s){
-		if(s.equals("Enter")){
-			operate();
-			return;
-		}
-		if(s.equals("Clear"))
-			clear();
-		else if(s.equals("Delete"))
-			delete();
-		else if(s.equals("-") && !onRightSide && left.equals(""))
+		if(s.equals("-") && !onRightSide && left.equals(""))
 			left = left + s;
 		else if(s.equals("-") && onRightSide && !operator.equals("") && right.equals(""))
 			right = right + s; 
@@ -77,6 +69,8 @@ class Calculator {
        Delete the rightmost character in the expression. Called by using backspace or clicking the Delete button
      */
 	public void delete(){
+		System.out.println("Right: "+right);
+		System.out.println("Left: "+left);
 		if(onRightSide){
 			if(right.equals("")){
 				operator = "";
@@ -88,6 +82,7 @@ class Calculator {
 			if(!left.equals(""))
 				left = left.substring(0,left.length() - 1);
 		}
+		refresh();
 	}
     /**
        Operate on the current expression and display the result
@@ -98,37 +93,32 @@ class Calculator {
 		if(left.equals("") || operator.equals("") || right.equals("")){ return; }
 		if(operator.equals("+")){
 			result = Double.parseDouble(left) + Double.parseDouble(right);
-			clear();
-			left = "" + result;
-			refresh();
-			onRightSide = false;
+			displayResult(result);
 		}
 		else if (operator.equals("-")){
 			result = Double.parseDouble(left) - Double.parseDouble(right);
-			clear();
-			left = "" + result;
-			refresh();
-			onRightSide = false;
+			displayResult(result);
 		}
 		else if (operator.equals("*")){
 			result = Double.parseDouble(left) * Double.parseDouble(right);
-			clear();
-			left = "" + result;
-			refresh();
-			onRightSide = false;
+			displayResult(result);
 		}
 		else if (operator.equals("/")){
 			if (Double.parseDouble(right) != 0){
 				result = Double.parseDouble(left) / Double.parseDouble(right);
-				clear();
-				left = "" + result;
-				refresh();
-				onRightSide = false;
+				displayResult(result);
 			} else 
 				display.append("Error: Divide by zero");
 		}
 		}catch(NumberFormatException nfe){
 			display.append("Error: Number Formatting");
 		}
+	}
+
+	private void displayResult(double result){
+		clear();
+		left = "" + result;
+		refresh();
+		onRightSide = false;
 	}
 }
