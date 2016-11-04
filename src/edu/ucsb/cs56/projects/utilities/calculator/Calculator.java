@@ -69,8 +69,6 @@ class Calculator {
        Delete the rightmost character in the expression. Called by using backspace or clicking the Delete button
      */
 	public void delete(){
-		System.out.println("Right: "+right);
-		System.out.println("Left: "+left);
 		if(onRightSide){
 			if(right.equals("")){
 				operator = "";
