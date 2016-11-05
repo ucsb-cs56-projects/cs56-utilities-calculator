@@ -54,7 +54,9 @@ class Calculator {
 			right = right + s; 
 		else if(s.equals("*") || s.equals("+")
 			|| s.equals("-") || s.equals("/")){
-			if(operator.equals("") || right.equals("")){
+		        if (left.equals("") || left.equals("-"))
+			        return;
+			else if(operator.equals("") || right.equals("")){
 				operator = s;
 				onRightSide = true;
 			}
