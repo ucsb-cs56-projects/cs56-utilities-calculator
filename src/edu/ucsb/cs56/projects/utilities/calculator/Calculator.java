@@ -125,11 +125,20 @@ class Calculator {
 			display.append(e.toString());
 		}
 	}
-
+ 
+ /**
+     Displays result by replacing left String
+     @param Double result to be displayed
+  */
 	private void displayResult(double result){
 		clear();
 		left = "" + result;
 		refresh();
 		onRightSide = false;
 	}
+ 
+   /**
+     This method is for testing use only
+   */
+   public String getLeft() { return left; }
 }
