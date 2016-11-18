@@ -14,6 +14,7 @@ class Calculator {
 
 	private String left, operator, right;
 	private boolean onRightSide; // true if appending to right side of expression, false if appending to left side
+	private boolean displayingResult;
 	private JLabelMessageDestination display;
 	private final HashMap<String, Callable<Double>> functions; // Hash map of calculator operator to lambda function
 
@@ -59,6 +60,8 @@ class Calculator {
 				onRightSide = true;
 			}
 		}
+		else if (s.equals(".") && getCurrentSide().contains(".")) // Don't allow more than 1 decimal per side
+			return;
 		else if(onRightSide)
 			right = right + s;
 		else
@@ -142,4 +145,10 @@ class Calculator {
      This method is for testing use only
    */
    public String getLeft() { return left; }
+
+   public String getCurrentSide(){
+	   if (onRightSide)
+	       return right;
+		return left;
+   }
 }
