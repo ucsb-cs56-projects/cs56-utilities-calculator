@@ -28,6 +28,7 @@ class Calculator {
 		operator = "";
 		right = "";
 		onRightSide = false;
+		displayingResult = false;
 		this.display = display;
 		refresh();
 
@@ -58,10 +59,15 @@ class Calculator {
 			else if(operator.equals("") || right.equals("")){
 				operator = s;
 				onRightSide = true;
+				displayingResult = false;
 			}
 		}
 		else if (s.equals(".") && getCurrentSide().contains(".")) // Don't allow more than 1 decimal per side
 			return;
+		else if (displayingResult){
+			left = s;
+			displayingResult = false;
+		} 
 		else if(onRightSide)
 			right = right + s;
 		else
@@ -139,6 +145,7 @@ class Calculator {
 			left = "" + result;
 		refresh();
 		onRightSide = false;
+		displayingResult = true;
 	}
  
    /**
