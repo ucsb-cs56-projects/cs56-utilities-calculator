@@ -25,6 +25,7 @@ public class CalculatorTest {
     private final String[] test6 = {"2","3","3","5",".","CLEAR","2","+","2"};
     private final String[] test7 = {"1","0","1","+","/","*","1","1"};
     private final String[] test8 = {"1","/","0"};
+    private final String[] test9 = {"1",".",".","3","-",".",".","2"};
     // end instance variables
 
     public CalculatorTest() {
@@ -97,6 +98,12 @@ public class CalculatorTest {
     public void testDivisionByZero() {
         evaluateNoException(test8);
         assertEquals(cal.getLeft(),"Infinity");
+    }
+
+    @Test
+    public void testMultipleDecimals() {
+	evaluateNoException(test9);
+	assertEquals(cal.getLeft(),"1.1");
     }
     
 } // CalculatorTest
