@@ -16,6 +16,7 @@ class Calculator {
 	private boolean onRightSide; // true if appending to right side of expression, false if appending to left side
 	private boolean displayingResult;
 	private JLabelMessageDestination display;
+  private JLabelMessageDestination resultDisplay;
 	private final HashMap<String, Callable<Double>> functions; // Hash map of calculator operator to lambda function
 
     /**
@@ -23,13 +24,16 @@ class Calculator {
        @param display The JLabelMessageDestination to send the operations
        and results to
      */
-	public Calculator(JLabelMessageDestination display){
+	public Calculator(JLabelMessageDestination display,
+                    JLabelMessageDestination resultDisplay){
 		left = "";
 		operator = "";
 		right = "";
 		onRightSide = false;
 		displayingResult = false;
 		this.display = display;
+    this.resultDisplay = resultDisplay;
+    resultDisplay.append("Hello!");
 		refresh();
 
 		functions = new HashMap<String, Callable<Double>>();
@@ -94,6 +98,7 @@ class Calculator {
 		operator = "";
 		right = "";
 		onRightSide = false;
+    resultDisplay.append("Cleared");
 		refresh();
 	}
 
@@ -102,6 +107,8 @@ class Calculator {
        backspace or clicking the Delete button
      */
 	public void delete(){
+    if(displayingResult)
+      return;
 		if(onRightSide){
 			if(right.equals("")){
 				operator = "";
@@ -127,9 +134,11 @@ class Calculator {
 			result = functions.get(operator).call();
 			displayResult(result);
 		}catch(NumberFormatException nfe){
-			display.append("Error: Number Formatting");
+      clear();
+			resultDisplay.append("Error: Number Formatting");
 		}catch(Exception e){
-			display.append(e.toString());
+      clear();
+			resultDisplay.append(e.toString());
 		}
 	}
  
@@ -143,7 +152,7 @@ class Calculator {
 			left = "" + (int)result;
 		else
 			left = "" + result;
-		refresh();
+		resultDisplay.append(left);
 		onRightSide = false;
 		displayingResult = true;
 	}
