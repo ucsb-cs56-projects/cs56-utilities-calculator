@@ -130,7 +130,10 @@ class Calculator {
   */
 	private void displayResult(double result){
 		clear();
-		left = "" + result;
+		if ((int)result == result)
+			left = "" + (int)result;
+		else
+			left = "" + result;
 		refresh();
 		onRightSide = false;
 	}
