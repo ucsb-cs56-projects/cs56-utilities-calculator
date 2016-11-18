@@ -33,6 +33,8 @@ class Calculator {
         functions.put("-", ()->Double.parseDouble(left)-Double.parseDouble(right));
 		functions.put("/", ()->Double.parseDouble(left)/Double.parseDouble(right));
 		functions.put("*", ()->Double.parseDouble(left)*Double.parseDouble(right));
+		functions.put("^", ()->Math.pow(Double.parseDouble(left),Double.parseDouble(right)));
+		functions.put("√", ()->Math.pow(Double.parseDouble(right),1/Double.parseDouble(left)));
 	}
 
     /**
@@ -43,7 +45,7 @@ class Calculator {
 			left = left + s;
 		else if(s.equals("-") && onRightSide && !operator.equals("") && right.equals(""))
 			right = right + s; 
-		else if(s.equals("*") || s.equals("+") || s.equals("-") || s.equals("/")){
+		else if(s.equals("*") || s.equals("+") || s.equals("-") || s.equals("/") || s.equals("^") || s.equals("√")){
 			if(operator.equals("") || right.equals("")){
 				operator = s;
 				onRightSide = true;
