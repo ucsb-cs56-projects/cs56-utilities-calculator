@@ -26,21 +26,34 @@ public class CalculatorGUI  {
      */
     
     public static void main (String[] args) {
+
+       // create frame and components: Font, Display, Keypad, and Calculator
+	
        JFrame frame = new JFrame();
-       frame.setDefaultCloseOperation(JFrame. EXIT_ON_CLOSE);
-	frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
        Font bigfont = new Font("Helvetica",Font.PLAIN, 28);
-	JLabelMessageDestination display = new JLabelMessageDestination();
-	frame.add(javax.swing.Box.createHorizontalGlue());
-	display.setHorizontalAlignment(SwingConstants.RIGHT);
-	display.setMaximumSize(new Dimension(600,40));
-	frame.getContentPane().add(display);
-	frame.add(javax.swing.Box.createHorizontalGlue());
-	display.setFont(bigfont);
-	Calculator calc = new Calculator(display);
-	Keypad keys = new Keypad(calc);
+       JLabelMessageDestination display = new JLabelMessageDestination();
+       Calculator calc = new Calculator(display);
+       Keypad keys = new Keypad(calc);
+
+       // add the display to the frame
+       
+       frame.add(javax.swing.Box.createHorizontalGlue());
+       frame.getContentPane().add(display);
+
+       // add keypad to the frame
+       
+       frame.add(javax.swing.Box.createHorizontalGlue());
+       frame.setDefaultCloseOperation(JFrame. EXIT_ON_CLOSE);
+       frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
        frame.getContentPane().add(keys);
-	keys.requestFocusInWindow();
+
+       // set font and dimensions for display
+
+       display.setFont(bigfont);
+       display.setHorizontalAlignment(SwingConstants.RIGHT);
+       display.setMaximumSize(new Dimension(600,40));
+       
+       keys.requestFocusInWindow();
 
        // to make sure that grids go left to right, no matter what
 

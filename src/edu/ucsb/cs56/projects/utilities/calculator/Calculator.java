@@ -6,7 +6,8 @@ import java.util.concurrent.Callable;
 
 
 /**
-   This class represents the portion of the calculator that does all of the computations, and sends it to the screen.
+   This class represents the portion of the calculator that does all of the
+   computations, and sends it to the screen.
    @author Sam Dowell
  */
 class Calculator {
@@ -18,7 +19,8 @@ class Calculator {
 
     /**
        Constructor
-       @param display The JLabelMessageDestination to send the operations and results to
+       @param display The JLabelMessageDestination to send the operations
+       and results to
      */
 	public Calculator(JLabelMessageDestination display){
 		left = "";
@@ -38,15 +40,21 @@ class Calculator {
 	}
 
     /**
-       Call this method with a String to have the calculator do some operation (i.e. appending a digit to the current number, or appending an operator to the expression)
+       Call this method with a String to have the calculator do some operation
+       (i.e. appending a digit to the current number, or appending an operator
+       to the expression)
      */
 	public void append(String s){
 		if(s.equals("-") && !onRightSide && left.equals(""))
 			left = left + s;
-		else if(s.equals("-") && onRightSide && !operator.equals("") && right.equals(""))
+		else if(s.equals("-") && onRightSide
+			&& !operator.equals("") && right.equals(""))
 			right = right + s; 
+
 		else if(s.equals("*") || s.equals("+") || s.equals("-") || s.equals("/") || s.equals("^") || s.equals("√")){
-			if(operator.equals("") || right.equals("")){
+			if (left.equals("") || left.equals("-"))
+				return;
+			else if(operator.equals("") || right.equals("")){
 				operator = s;
 				onRightSide = true;
 			}
@@ -63,7 +71,8 @@ class Calculator {
      */
 	public void refresh(){
 		if(onRightSide)
-			display.append(left + " " + operator + " " + right + "|");
+			display.append(left + " " + operator + " "
+				       + right + "|");
 		else
 			display.append(left + "| " + operator + " " + right);
 	}
@@ -80,7 +89,8 @@ class Calculator {
 	}
 
     /**
-       Delete the rightmost character in the expression. Called by using backspace or clicking the Delete button
+       Delete the rightmost character in the expression. Called by using
+       backspace or clicking the Delete button
      */
 	public void delete(){
 		if(onRightSide){
@@ -103,7 +113,8 @@ class Calculator {
 	public void operate(){
 		double result = 0.0;
 		try{
-			if(left.equals("") || operator.equals("") || right.equals("")){ return; }
+			if(left.equals("") || operator.equals("")
+			   || right.equals(""))   { return; }
 			result = functions.get(operator).call();
 			displayResult(result);
 		}catch(NumberFormatException nfe){
@@ -112,11 +123,20 @@ class Calculator {
 			display.append(e.toString());
 		}
 	}
-
+ 
+ /**
+     Displays result by replacing left String
+     @param Double result to be displayed
+  */
 	private void displayResult(double result){
 		clear();
 		left = "" + result;
 		refresh();
 		onRightSide = false;
 	}
+ 
+   /**
+     This method is for testing use only
+   */
+   public String getLeft() { return left; }
 }

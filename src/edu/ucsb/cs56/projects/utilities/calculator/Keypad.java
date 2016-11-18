@@ -11,9 +11,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
-	Keypad is a class to represent a keypad which sends signals to a calculator
+	Keypad is a class to represent a keypad which sends signals to a
+	calculator
 	@author Sam Dowell
 */
+
 public class Keypad extends JComponent implements KeyListener{
 
 	private Calculator calculator;
@@ -51,15 +53,21 @@ public class Keypad extends JComponent implements KeyListener{
 		makeButton("Enter", () -> this.calculator.operate());
 		makeButton("+");
 	}
-/**
-	Helper method that initializes the JButtons for the GUI
+    /**
+	Helper method that initializes the JButtons for the GUI and provides
+	them with anonymous initialized ButtonListeners
 	@param s String representation of what signal the button will send
-*/
+    */
 	private void makeButton(String s){
 		JButton jb = new JButton(s);
 		jb.addActionListener(new ButtonListener(s));
 		this.add(jb);
 	}
+
+    /** Helper method that initializes the JButtons Enter, Delete and Clear.
+	Provides them with anonymous ButtonListeners
+	@param s String button label, func Runnable for action performed
+    */
 	private void makeButton(String s, Runnable func){
 		JButton jb = new JButton(s);
 		jb.addActionListener(new ButtonListener(s, func));
@@ -72,30 +80,6 @@ public class Keypad extends JComponent implements KeyListener{
 		setFocusable(true);
 		requestFocusInWindow();
 	}
-/**
-	Inner class that implements an ActionListener to handle button presses
-*/
-   class ButtonListener implements ActionListener{
-		private String num;
-		private Runnable func;
-
-		public ButtonListener(String s) {
-			super();  // is this line necessary? what does it do?
-			this.num = s;
-			this.func = () -> calculator.append(num);
-		}
-
-		public ButtonListener(String s, Runnable func) {
-			super();  // is this line necessary? what does it do?
-			this.num = s;
-			this.func = func;
-		}
-
-		public void actionPerformed (ActionEvent event) {
-			this.func.run();
-			resetFocus();
-		}
-    }
 
     @Override public void keyReleased(KeyEvent ke){}
     @Override public void keyTyped(KeyEvent ke){}
@@ -106,7 +90,8 @@ public class Keypad extends JComponent implements KeyListener{
     @Override public void keyPressed(KeyEvent ke){
 	String key = java.awt.event.KeyEvent.getKeyText(ke.getKeyCode());
 		char k = ke.getKeyChar();
-		if((k >= '0' && k <= '9') || k == '+' || k == '-' || k == '*' || k == '/' || k == '.')
+		if((k >= '0' && k <= '9')
+		   || k == '+' || k == '-' || k == '*' || k == '/' || k == '.')
 			calculator.append("" + k);
 		else if(k == 'c' || k == 'C')
 			calculator.clear();
@@ -122,5 +107,44 @@ public class Keypad extends JComponent implements KeyListener{
 			calculator.append("/");
 		else if(key.equals("Backspace"))
 			calculator.delete();
-		}
+    }
+
+    /**
+	Inner class that implements an ActionListener to handle button presses
+    */
+   class ButtonListener implements ActionListener{
+       private String num;
+       private Runnable func;
+
+       /**
+	  ButtonListener constructor, creates ActionListener for the printing
+	  buttons and sets func to the append() method in calculator.
+	  @param s String character to be appended
+       */
+       public ButtonListener(String s) {
+	   super();  // is this line necessary? what does it do?
+	   this.num = s;
+	   this.func = () -> calculator.append(num);
+       }
+
+       /**
+	  ButtonListener constructor that takes an extra func parameter, and
+	  that to the private Runnable func within ButtonListener
+	  @param s String button name, func Runnable unique function
+       */
+       public ButtonListener(String s, Runnable func) {
+	   super();  // is this line necessary? what does it do?
+	   this.num = s;
+	   this.func = func;
+       }
+
+       /**
+	  Runs the func in ButtonListener to the calculator
+       */
+       public void actionPerformed (ActionEvent event) {
+	   this.func.run();
+	   resetFocus();
+       }
+   }
+
 }
