@@ -51,7 +51,7 @@ class Calculator {
 			&& !operator.equals("") && right.equals(""))
 			right = right + s; 
 
-		else if(s.equals("*") || s.equals("+") || s.equals("-") || s.equals("/") || s.equals("^") || s.equals("√")){
+		else if(functions.get(s) != null){   // Checks if symbol is in 'functions' HashMap
 			if (left.equals("") || left.equals("-"))
 				return;
 			else if(operator.equals("") || right.equals("")){
