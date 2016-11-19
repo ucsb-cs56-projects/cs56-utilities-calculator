@@ -26,11 +26,13 @@ public class CalculatorTest {
     private final String[] test7 = {"1","0","1","+","/","*","1","1"};
     private final String[] test8 = {"1","/","0"};
     private final String[] test9 = {"1",".",".","3","-",".",".","2"};
+    private final String[] test10 = {"-","3","^","2"};
+    private final String[] test11 = {"3","√","-","2","7"};
     // end instance variables
 
     public CalculatorTest() {
 	fill = new JLabelMessageDestination();
-        cal = new Calculator(fill);
+        cal = new Calculator(fill,fill);
     }
 
     public void evaluateNoException(String[] test) {
@@ -51,13 +53,11 @@ public class CalculatorTest {
         assertEquals(cal.getLeft(),"47");
     }
 
-
     @Test
     public void testSubtraction() {
         evaluateNoException(test2);
         assertEquals(cal.getLeft(),"3");
     }
-
 
     @Test
     public void testMultiplication() {
@@ -65,13 +65,11 @@ public class CalculatorTest {
         assertEquals(cal.getLeft(),"66.8");
     }
 
-
     @Test
     public void testDivision() {
         evaluateNoException(test4);
         assertEquals(cal.getLeft(),"40");
     }
-
 
     @Test
     public void testDelete() {
@@ -86,13 +84,11 @@ public class CalculatorTest {
         assertEquals(cal.getLeft(),"4");
     }
 
-
     @Test
     public void testOperatorReplacement() {
         evaluateNoException(test7);
         assertEquals(cal.getLeft(),"1111");
     }
-
 
     @Test
     public void testDivisionByZero() {
@@ -104,6 +100,18 @@ public class CalculatorTest {
     public void testMultipleDecimals() {
 	evaluateNoException(test9);
 	assertEquals(cal.getLeft(),"1.1");
+    }
+
+    @Test
+    public void testPowerOf() {
+	evaluateNoException(test10);
+	assertEquals(cal.getLeft(),"9");
+    }
+
+    @Test
+    public void testRootOf() {
+	evaluateNoException(test11);
+	assertEquals(cal.getLeft(),"-3");
     }
     
 } // CalculatorTest
