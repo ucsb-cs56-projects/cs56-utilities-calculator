@@ -5,7 +5,7 @@ cs56-utilities-calculator
 
 A graphical calculator written in Java
 
-![](http://imgur.com/b8w5bk8)
+![](http://i.imgur.com/b8w5bk8.png)
 
 A simple 4 function calculator that takes two numbers and adds, subtracts, multiplies and divides them.  Newer version comes with power and root support.  Supports floating point math, negative numbers, and comes with Clear and Delete buttons to erase result and inputs.
 
