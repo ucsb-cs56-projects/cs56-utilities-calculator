@@ -33,8 +33,8 @@ public class Keypad extends JComponent implements KeyListener{
 		this.setLayout(new GridLayout(0,4));
 
 		makeButton("Clear", () -> this.calculator.clear());
-		makeButton("");
-		makeButton("");
+		makeButton("^");
+		makeButton("√");
 		makeButton("Delete", () -> this.calculator.delete());
 		makeButton("7");
 		makeButton("8");

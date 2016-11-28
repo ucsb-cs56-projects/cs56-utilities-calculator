@@ -14,7 +14,9 @@ class Calculator {
 
 	private String left, operator, right;
 	private boolean onRightSide; // true if appending to right side of expression, false if appending to left side
+	private boolean displayingResult;
 	private JLabelMessageDestination display;
+  private JLabelMessageDestination resultDisplay;
 	private final HashMap<String, Callable<Double>> functions; // Hash map of calculator operator to lambda function
 
     /**
@@ -22,23 +24,25 @@ class Calculator {
        @param display The JLabelMessageDestination to send the operations
        and results to
      */
-	public Calculator(JLabelMessageDestination display){
+	public Calculator(JLabelMessageDestination display,
+                    JLabelMessageDestination resultDisplay){
 		left = "";
 		operator = "";
 		right = "";
 		onRightSide = false;
+		displayingResult = false;
 		this.display = display;
+    this.resultDisplay = resultDisplay;
+    resultDisplay.append("Hello!");
 		refresh();
 
 		functions = new HashMap<String, Callable<Double>>();
-		functions.put("+", ()->Double.parseDouble(left)
-			      + Double.parseDouble(right));
-		functions.put("-", ()->Double.parseDouble(left)
-			      - Double.parseDouble(right));
-		functions.put("/", ()->Double.parseDouble(left)
-			      / Double.parseDouble(right));
-		functions.put("*", ()->Double.parseDouble(left)
-			      * Double.parseDouble(right));
+        functions.put("+", ()->Double.parseDouble(left)+Double.parseDouble(right));
+        functions.put("-", ()->Double.parseDouble(left)-Double.parseDouble(right));
+		functions.put("/", ()->Double.parseDouble(left)/Double.parseDouble(right));
+		functions.put("*", ()->Double.parseDouble(left)*Double.parseDouble(right));
+		functions.put("^", ()->Math.pow(Double.parseDouble(left),Double.parseDouble(right)));
+		functions.put("√", ()->Math.pow(Double.parseDouble(right),1/Double.parseDouble(left)));
 	}
 
     /**
@@ -52,15 +56,22 @@ class Calculator {
 		else if(s.equals("-") && onRightSide
 			&& !operator.equals("") && right.equals(""))
 			right = right + s; 
-		else if(s.equals("*") || s.equals("+")
-			|| s.equals("-") || s.equals("/")){
-		        if (left.equals("") || left.equals("-"))
-			        return;
+
+		else if(functions.get(s) != null){   // Checks if symbol is in 'functions' HashMap
+			if (left.equals("") || left.equals("-"))
+				return;
 			else if(operator.equals("") || right.equals("")){
 				operator = s;
 				onRightSide = true;
+				displayingResult = false;
 			}
 		}
+		else if (s.equals(".") && getCurrentSide().contains(".")) // Don't allow more than 1 decimal per side
+			return;
+		else if (displayingResult){
+			left = s;
+			displayingResult = false;
+		} 
 		else if(onRightSide)
 			right = right + s;
 		else
@@ -87,6 +98,7 @@ class Calculator {
 		operator = "";
 		right = "";
 		onRightSide = false;
+    resultDisplay.append("Cleared");
 		refresh();
 	}
 
@@ -95,6 +107,8 @@ class Calculator {
        backspace or clicking the Delete button
      */
 	public void delete(){
+    if(displayingResult)
+      return;
 		if(onRightSide){
 			if(right.equals("")){
 				operator = "";
@@ -120,16 +134,37 @@ class Calculator {
 			result = functions.get(operator).call();
 			displayResult(result);
 		}catch(NumberFormatException nfe){
-			display.append("Error: Number Formatting");
+      clear();
+			resultDisplay.append("Error: Number Formatting");
 		}catch(Exception e){
-			display.append(e.toString());
+      clear();
+			resultDisplay.append(e.toString());
 		}
 	}
-
+ 
+ /**
+     Displays result by replacing left String
+     @param Double result to be displayed
+  */
 	private void displayResult(double result){
 		clear();
-		left = "" + result;
-		refresh();
+		if ((int)result == result)
+			left = "" + (int)result;
+		else
+			left = "" + result;
+		resultDisplay.append(left);
 		onRightSide = false;
+		displayingResult = true;
 	}
+ 
+   /**
+     This method is for testing use only
+   */
+   public String getLeft() { return left; }
+
+   public String getCurrentSide(){
+	   if (onRightSide)
+	       return right;
+		return left;
+   }
 }
