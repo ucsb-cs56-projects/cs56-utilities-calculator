@@ -24,3 +24,7 @@ project history
 
  F16 | oshen 6pm | nediamond, oliverleifshen | More user-friendly, less buggy
 ``` 
+
+__F16 Final Remarks__
+
+There has been major improvements to the calculator both in terms of the neatness of the code and the presentation of the GUI.  However, there is still a lot of limitations for both performance and reasonable use.  Power and root functions are experimental, which causes a quite of few problems when using it.  Multiplicative math with floating point numbers gives bizarre answers.  Performance wise the calculator can only do one operation at a time, so a possible development is to expand it so it can take more operators and expressions.  However, the whole theme of this project is to keep things simple, don't go overboard with features; make it simple to use while still being accurate.
