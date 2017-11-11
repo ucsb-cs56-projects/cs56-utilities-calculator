@@ -14,6 +14,10 @@ import org.junit.Test;
  */
 
 public class CalculatorTest {
+
+}
+
+/*
     // begin instance variables
     private final Calculator cal;
     private final JLabelMessageDestination fill;
@@ -115,3 +119,5 @@ public class CalculatorTest {
     }
     
 } // CalculatorTest
+
+*/
