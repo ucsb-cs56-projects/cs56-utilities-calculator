@@ -109,36 +109,61 @@ public class Keypad extends JComponent implements KeyListener{
 			calculator.delete();
     }
 
-    /**
-	Inner class that implements an ActionListener to handle button presses
-    */
+	/*
+	 * Inner class for number and operator button presses
+	
+
+	class OpListener implements ActionListener{
+		private String num;
+
+		public OpListener(String s) {
+			super();
+			this.num = s;
+		}
+		public void actionPerformed(ActionEvent event) {
+			calculator.append(num);
+			resetFocus();
+		}
+	}
+	
+	class EnterListener implements ActionListener{
+		public EnterListener(){
+			super();
+		}
+		public void actionPerformed(ActionEvent event) {
+			calculator.operate();
+	*/
+
+
    class ButtonListener implements ActionListener{
        private String num;
        private Runnable func;
 
-       /**
+       /*
 	  ButtonListener constructor, creates ActionListener for the printing
 	  buttons and sets func to the append() method in calculator.
 	  @param s String character to be appended
-       */
+	*/
+       
        public ButtonListener(String s) {
 	   super();  // is this line necessary? what does it do?
 	   this.num = s;
 	   this.func = () -> calculator.append(num);
        }
 
-       /**
+       /*
 	  ButtonListener constructor that takes an extra func parameter, and
 	  that to the private Runnable func within ButtonListener
 	  @param s String button name, func Runnable unique function
-       */
+	*/
+
        public ButtonListener(String s, Runnable func) {
 	   super();  // is this line necessary? what does it do?
 	   this.num = s;
 	   this.func = func;
        }
 
-       /**
+       /*
 	  Runs the func in ButtonListener to the calculator
        */
        public void actionPerformed (ActionEvent event) {
@@ -146,5 +171,6 @@ public class Keypad extends JComponent implements KeyListener{
 	   resetFocus();
        }
    }
+
 
 }
