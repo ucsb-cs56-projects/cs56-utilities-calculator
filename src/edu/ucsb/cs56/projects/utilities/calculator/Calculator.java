@@ -24,7 +24,7 @@ class Calculator {
 
 	//private String left, operator, right;
 	//private boolean onRightSide; // true if appending to right side of expression, false if appending to left side
-	//private boolean displayingResult;
+	private boolean displayingResult;
 	private JLabelMessageDestination display;
   private JLabelMessageDestination resultDisplay;
 	//private final HashMap<String, Callable<Double>> functions; // Hash map of calculator operator to lambda function
@@ -40,7 +40,7 @@ class Calculator {
 		//operator = "";
 		//right = "";
 		//onRightSide = false;
-		//displayingResult = false;
+		displayingResult = false;
 		this.display = display;
     this.resultDisplay = resultDisplay;
     resultDisplay.append("Hello!");
@@ -71,7 +71,12 @@ class Calculator {
        to the expression)
      */
 	public void append(String s){
-		
+
+		if (displayingResult){
+			clear();
+			displayingResult = false;
+		}
+
 		// If s is a decimal point inside of a number or is a number itself
 		if ((!(currString.equals("")) && s.equals(".")) || Character.isDigit(s.charAt(0)))
 			currString += s;
@@ -151,7 +156,8 @@ class Calculator {
 					result += " ";
 				result += ("" + numbers.get(i) + " " + operators.get(i));
 			}
-			result += currString;
+			if (!(currString.equals("")))
+				result += Double.toString(Double.parseDouble(currString));
 			display.append(result);
 		}
 
@@ -273,7 +279,7 @@ class Calculator {
      @param Double result to be displayed
   */
 	private void displayResult(double result){
-		clear();
+		displayingResult = true;
 		//displayingResult = true;
 		resultDisplay.append(Double.toString(result));
 
