@@ -97,10 +97,14 @@ class Calculator {
 	    for (int i = 0; i < operators.size(); i++){
 		if (i > 0)
 		    result += " ";
-		result += ("" + numbers.get(i) + " " + operators.get(i));
+		    if ((numbers.get(i) % 1)== 0)
+			result += (int)((numbers.get(i)).intValue());
+		    else
+			result += Double.toString(numbers.get(i));
+		    result += (" " + operators.get(i));
 	    }
 	    if (!(currString.equals("")))
-		result += Double.toString(Double.parseDouble(currString));
+		result += currString;
 	    display.append(result);
 	}
     }
@@ -126,7 +130,11 @@ class Calculator {
 	    currString = currString.substring(0, currString.length() - 1);
 	else if (operators.size() > 0){
 	    operators.remove(operators.size() - 1);
-	    currString = Double.toString(numbers.get(numbers.size() - 1));
+	    double d = numbers.get(numbers.size() - 1);
+	    if (d%1 == 0)
+		currString += (int)d;
+	    else
+		currString += Double.toString(d);
 	    numbers.remove(numbers.size() - 1);
 	}
 	refresh();	
