@@ -7,10 +7,10 @@ import java.text.DecimalFormat;
 import java.util.Stack;
 
 /**
-   This class represents the portion of the calculator that does all of the
-   computations, and sends it to the screen.
-   @author Sam Dowell
-*/
+ *  This class represents the portion of the calculator that does all of the
+ *  computations, and sends it to the screen.
+ *  @author Sam Dowell
+ */
 class Calculator {
     private String entry;
     private int parenCount;
@@ -19,10 +19,10 @@ class Calculator {
     private JLabelMessageDestination resultDisplay;
     
     /**
-       Constructor
-       @param display The JLabelMessageDestination to send the operations
-       and results to
-    */
+     *  Constructor
+     *  @param display The JLabelMessageDestination to send the operations
+     *  and results to
+     */
     public Calculator(JLabelMessageDestination display,
 		      JLabelMessageDestination resultDisplay){
 	displayingResult = false;
@@ -34,13 +34,15 @@ class Calculator {
     }
     
     /**
-       Call this method with a String to have the calculator do some operation
-       (i.e. appending a digit to the current number, or appending an operator
-       to the expression)
-    */
+     *  Call this method with a String to have the calculator do some operation
+     *  (i.e. appending a digit to the current number, or appending an operator
+     *  to the expression)
+     */
     public void append(String s){
 	
 	char d = s.charAt(0);
+
+	
 	
 	if (displayingResult){
 	    clear();
@@ -54,7 +56,7 @@ class Calculator {
 	}
 	
 	// If the calculator is blank
-	if (entry == ""){
+        if (entry == ""){
 	    if ((isOperator(s) && !(s.equals("-"))) || s.equals(")"))
 		return;
 	    else if (Character.isDigit(d) || s.equals("(") || s.equals("-"))
@@ -121,7 +123,10 @@ class Calculator {
 	}
        	refresh();
     }
-    
+
+    /**
+     * Checks if a character is an operator.
+     */
     private boolean isOperator(String s){
 	if (s.equals("*") || s.equals("/") || s.equals("+") || s.equals("-") || s.equals("^"))
 	    return true;
@@ -131,15 +136,15 @@ class Calculator {
     
     
     /**
-       Refresh the display to update it to the current state of the expression
-    */
+     *  Refresh the display to update it to the current state of the expression
+     */
     public void refresh(){
 	display.append(entry);
     }
     
     /**
-       Clear out the expression and refresh the display
-    */
+     *  Clear out the expression and refresh the display
+     */
     public void clear(){
 	entry = "";
 	parenCount = 0;
@@ -148,9 +153,9 @@ class Calculator {
     }
     
     /**
-       Delete the rightmost character in the expression. Called by using
-       backspace or clicking the Delete button
-    */
+     *  Delete the rightmost character in the expression. Called by using
+     *  backspace or clicking the Delete button
+     */
     public void delete(){
 	if (entry.equals("")){
 	    clear();
@@ -165,8 +170,8 @@ class Calculator {
     }
     
     /**
-       Operate on the current expression and display the result
-    */
+     *  Operate on the current expression and display the result
+     */
     public void operate(){
 	if(entry.length() == 0)
 	    return;
@@ -175,39 +180,45 @@ class Calculator {
 	    displayResult(result);
 	}
     }
-    
+
+    /**
+     *  Evaluates a String arithmetic expression and returns result
+     */
     public double evaluate(String expression) {
 	Stack<Double> values = new Stack<Double>();
         Stack<Character> ops = new Stack<Character>();
 	for (int i = 0; i < expression.length(); i++){
-	    if(i == 0 && expression.charAt(i) == '-' && expression.length() > 1){
+	    char curr = expression.charAt(i);
+	    if(i == 0 && curr == '-' && expression.length() > 1){
 		StringBuffer sbuf = new StringBuffer();
-		sbuf.append(expression.charAt(i));
+		sbuf.append(curr);
 		i++;
-		if((expression.charAt(i) >= '0' && expression.charAt(i) <= '9') || expression.charAt(i) == '.'){
-		    while(i < expression.length() && ((expression.charAt(i) >= '0' && expression.charAt(i) <= '9') || expression.charAt(i) == '.')){
-			sbuf.append(expression.charAt(i));
+		if((curr >= '0' && curr <= '9') || curr == '.'){
+		    while(i < expression.length() && ((curr >= '0' && curr <= '9') || curr == '.')){
+			sbuf.append(curr);
 			i++;
+			if(i < expression.length()) curr = expression.charAt(i);
 		    }
 		    if(i < expression.length()) i--;
 		    values.push(Double.parseDouble(sbuf.toString()));
 		}
-	    } else if((expression.charAt(i) >= '0' && expression.charAt(i) <= '9') || expression.charAt(i) == '.'){
+	    } else if((curr >= '0' && curr <= '9') || curr == '.'){
 		StringBuffer sbuf = new StringBuffer();
-		while(i < expression.length() && ((expression.charAt(i) >= '0' && expression.charAt(i) <= '9') || expression.charAt(i) == '.')){
-		    sbuf.append(expression.charAt(i));
+		while(i < expression.length() && ((curr >= '0' && curr <= '9') || curr == '.')){
+		    sbuf.append(curr);
 		    i++;
+		    if(i < expression.length()) curr = expression.charAt(i);
 		}
 		if(i < expression.length()) i--;
 		values.push(Double.parseDouble(sbuf.toString()));
-	    } else if (expression.charAt(i) == '(') {
-                ops.push(expression.charAt(i));
+	    } else if (curr == '(') {
+                ops.push(curr);
 	    } else if (isOperator(expression.substring(i,i+1))){
-		while (!ops.empty() && hasPrecedence(expression.charAt(i), ops.peek())){
+		while (!ops.empty() && hasPrecedence(curr, ops.peek())){
                   values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 		}
-                ops.push(expression.charAt(i));
-            } else if (expression.charAt(i) == ')'){
+                ops.push(curr);
+            } else if (curr == ')'){
                 while (ops.peek() != '(')
                   values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 ops.pop();
@@ -218,7 +229,10 @@ class Calculator {
 	}
 	return values.pop();
     }
-    
+
+    /**
+     *  Determines if Operator 1 has precedence over Operator 2
+     */
     public boolean hasPrecedence(char op1, char op2){
         if (op2 == '(' || op2 == ')')
             return false;
@@ -227,7 +241,10 @@ class Calculator {
         else
             return true;
     }
- 
+
+    /**
+     *  Returns the result of an operator applied to two operands
+     */
     public double applyOp(char op, double b, double a){
         switch (op){
         case '+':
@@ -248,9 +265,9 @@ class Calculator {
     }
     
     /**
-       Displays result by replacing left String
-       @param Double result to be displayed
-    */
+     *  Displays result by replacing left String
+     *  @param Double result to be displayed
+     */
     private void displayResult(double result){
 	displayingResult = true;
 	DecimalFormat decimalformat = new DecimalFormat("0.00000000E0");

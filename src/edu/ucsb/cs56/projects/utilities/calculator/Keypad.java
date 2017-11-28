@@ -11,19 +11,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
-   Keypad is a class to represent a keypad which sends signals to a
-   calculator
-   @author Sam Dowell
-*/
-
+ *  Keypad is a class to represent a keypad which sends signals to a
+ *  calculator
+ *  @author Sam Dowell
+ */
 public class Keypad extends JComponent implements KeyListener{
     
     private Calculator calculator;
     
     /**
-       Constructor
-       @param calc Takes a Calculator object as an argument, to send signals to
-    */
+     *  Constructor
+     *  @param calc Takes a Calculator object as an argument, to send signals to
+     */
     public Keypad(Calculator calc){
 	super();
 	
@@ -55,11 +54,12 @@ public class Keypad extends JComponent implements KeyListener{
 	makeButton("(");
 	makeButton(")");
     }
+    
     /**
-       Helper method that initializes the JButtons for the GUI and provides
-       them with anonymous initialized ButtonListeners
-       @param s String representation of what signal the button will send
-    */
+     *  Helper method that initializes the JButtons for the GUI and provides
+     *  them with anonymous initialized ButtonListeners
+     *  @param s String representation of what signal the button will send
+     */
     private void makeButton(String s){
 	JButton jb = new JButton(s);
 	jb.addActionListener(new ButtonListener(s));
@@ -67,9 +67,9 @@ public class Keypad extends JComponent implements KeyListener{
     }
     
     /** Helper method that initializes the JButtons Enter, Delete and Clear.
-        Provides them with anonymous ButtonListeners
-        @param s String button label, func Runnable for action performed
-    */
+     *  Provides them with anonymous ButtonListeners
+     *  @param s String button label, func Runnable for action performed
+     */
     private void makeButton(String s, Runnable func){
 	JButton jb = new JButton(s);
 	jb.addActionListener(new ButtonListener(s, func));
@@ -77,8 +77,8 @@ public class Keypad extends JComponent implements KeyListener{
     }
     
     /**
-       Helper method to ensure that this window has the focus
-    */
+     *  Helper method to ensure that this window has the focus
+     */
     private void resetFocus(){
 	setFocusable(true);
 	requestFocusInWindow();
@@ -88,8 +88,8 @@ public class Keypad extends JComponent implements KeyListener{
     @Override public void keyTyped(KeyEvent ke){}
     
     /**
-       Handles keyboard buttons
-    */
+     *  Handles keyboard buttons
+     */
     @Override public void keyPressed(KeyEvent ke){
         String key = java.awt.event.KeyEvent.getKeyText(ke.getKeyCode());
 	char k = ke.getKeyChar();
