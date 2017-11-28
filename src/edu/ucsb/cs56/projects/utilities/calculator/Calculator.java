@@ -2,7 +2,6 @@ package edu.ucsb.cs56.projects.utilities.calculator;
 
 import java.util.ArrayList;
 import java.lang.NumberFormatException;
-import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.text.DecimalFormat;
 import java.util.Stack;
@@ -11,7 +10,7 @@ import java.util.Stack;
    This class represents the portion of the calculator that does all of the
    computations, and sends it to the screen.
    @author Sam Dowell
- */
+*/
 class Calculator {
     private String entry;
     private int parenCount;
@@ -140,7 +139,7 @@ class Calculator {
     
     /**
        Clear out the expression and refresh the display
-     */
+    */
     public void clear(){
 	entry = "";
 	parenCount = 0;
@@ -153,19 +152,18 @@ class Calculator {
        backspace or clicking the Delete button
     */
     public void delete(){
-	
-	if (entry.equals(""))
+	if (entry.equals("")){
+	    clear();
 	    return;
-	
-	if ((entry.substring(entry.length() - 1)).equals(")"))
+	} else if ((entry.substring(entry.length() - 1)).equals(")")) {
 	    parenCount++;
-	else if ((entry.substring(entry.length()-1)).equals("("))
+	} else if ((entry.substring(entry.length()-1)).equals("(")) {
 	    parenCount--;
+	}
 	entry = entry.substring(0, entry.length() - 1);
-	
 	refresh();
     }
-
+    
     /**
        Operate on the current expression and display the result
     */
@@ -178,8 +176,7 @@ class Calculator {
 	}
     }
     
-    public double evaluate(String expression)
-    {
+    public double evaluate(String expression) {
 	Stack<Double> values = new Stack<Double>();
         Stack<Character> ops = new Stack<Character>();
 	for (int i = 0; i < expression.length(); i++){
@@ -256,7 +253,7 @@ class Calculator {
     */
     private void displayResult(double result){
 	displayingResult = true;
-	DecimalFormat decimalformat = new DecimalFormat("#.########");
+	DecimalFormat decimalformat = new DecimalFormat("0.00000000E0");
 	result = Double.valueOf(decimalformat.format(result));
 	resultDisplay.append(Double.toString(result));
     }
