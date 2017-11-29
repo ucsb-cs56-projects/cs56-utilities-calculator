@@ -193,6 +193,7 @@ class Calculator {
 		StringBuffer sbuf = new StringBuffer();
 		sbuf.append(curr);
 		i++;
+		curr = expression.charAt(i);
 		if((curr >= '0' && curr <= '9') || curr == '.'){
 		    while(i < expression.length() && ((curr >= '0' && curr <= '9') || curr == '.')){
 			sbuf.append(curr);
