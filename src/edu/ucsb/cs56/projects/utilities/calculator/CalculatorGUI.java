@@ -13,16 +13,16 @@ import java.awt.Font;
 import java.awt.Dimension;
 
 /** CalculatorGUI.java is a GUI interface for a Calculator
-
-     @author Sam Dowell
-     @version CS56, Spring 2013, UCSB
-*/
+ *
+ *  @author Sam Dowell
+ *  @version CS56, Spring 2013, UCSB
+ */
 
 
 public class CalculatorGUI  {
 
     /** main method to fire up a JFrame on the screen  
-          @param args not used
+     *  @param args not used
      */
     
     public static void main (String[] args) {
@@ -68,6 +68,4 @@ public class CalculatorGUI  {
        frame.setResizable(false);
        frame.setVisible(true);
     }
-
-
 }
