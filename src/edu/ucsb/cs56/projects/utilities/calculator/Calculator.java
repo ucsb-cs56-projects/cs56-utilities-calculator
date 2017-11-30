@@ -59,7 +59,7 @@ class Calculator {
         if (entry == ""){
 	    if ((isOperator(s) && !(s.equals("-"))) || s.equals(")"))
 		return;
-	    else if (Character.isDigit(d) || s.equals("(") || s.equals("-"))
+	    else if (Character.isDigit(d) || s.equals("(") || s.equals("-") || s.equals("."))
 		{
 		    entry += s;
 		    if (s.equals("("))
@@ -71,6 +71,8 @@ class Calculator {
 	else if (isOperator(entry.substring(entry.length() - 1))) {
 	    if (Character.isDigit(d))
 		entry += s;
+	    else if (s.equals("."))
+		entry += s;
 	    else if (s.equals("(")){
 		entry += s;
 		parenCount++;
@@ -81,8 +83,14 @@ class Calculator {
 	
 	// If we're on a number
 	else if (Character.isDigit(entry.charAt(entry.length() - 1))) {
-	    if (Character.isDigit(d) || isOperator(s) || s.equals("."))
+	    if (Character.isDigit(d) || isOperator(s))
 		entry += s;
+	    else if (s.equals(".")){
+		if (hasDecimal(entry) == false)
+		    entry += s;
+		else
+		    return;
+	    }
 	    else if (s.equals(")")) {
 		entry += s;
 		parenCount--;
@@ -94,7 +102,18 @@ class Calculator {
 	    if (Character.isDigit(d)){
 		entry += s;
 	    }
+	    else if (entry.length() <= 1)
+		return;
+	    else if (Character.isDigit(entry.charAt(entry.length()-2))){	
+		if (isOperator(s))
+		    entry += s;
+		else if (s.equals(")")) {
+		    entry += s;
+		    parenCount--;
+		}
+	    }
 	}
+	
 	
 	// If we're on an open parenthese
 	else if (entry.charAt(entry.length()-1) == '('){
@@ -110,6 +129,8 @@ class Calculator {
 	    }
 	    else if (s.equals("-"))
 		entry += s;
+	    else if (s.equals("."))
+		entry += s;
 	}
 	
 		// If we're on a closed parenthese
@@ -123,6 +144,17 @@ class Calculator {
 	}
        	refresh();
     }
+
+    private boolean hasDecimal(String val){
+	for (int i = val.length() - 1; i >= 0; i--){
+		if (val.charAt(i) == '.')
+		    return true;
+		else if (isOperator(Character.toString(val.charAt(i))))
+		    return false;
+	}
+	return false;
+    }
+
 
     /**
      * Checks if a character is an operator.
