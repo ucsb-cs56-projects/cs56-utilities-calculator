@@ -22,8 +22,6 @@ The square root button does not work.  Trust us.  This is also listed as an issu
 Generally, the calculator won't let you enter an expression that would be illegal, i.e. a plus after a plus, but it won't check some things until runtime - like mismatched parentheses.  Furthermore, if you hit enter on an incomplete expression (like when you're on an operator) nothing will happen.
 (However, if you do manage to enter an illegal expression, please contact the police immediately)
 
-
-
 Run calculator with <code>ant run</code>
 
 project history
