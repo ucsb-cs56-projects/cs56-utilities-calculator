@@ -8,10 +8,10 @@ b) As a user, I can do multiplication, division, addition, and subtraction betwe
 
 c) Yes, the software runs. It works as a simple calulator that the user can use to evaluate basic algebraic expressions.
 
-d) As a programmer, I can implement a fraction button so that the answer can be given in simplified fraction form. 
-   As a programmer, I can implement a different color scheme so that the calculator is more appealing to look at.
-   As a programmer, I can implement the ability to do evalulate an algebraic expression using the current answer on the screen so that I can have continuous calculations.
-   As a programmer, I can implement trigonometric functions into the calculator so that the user can evaluate basic trigonometry.
+d) As a user, I can click a fraction button so that the answer is given in rational form. 
+   As a user, I can select from a list of different color schemes so that the calculator is more appealing to look at.
+   As a user, I can evalulate an algebraic expression using the current answer on the screen so that I can do continuous calculations.
+   As a user, I can use sin, cos, and tan functions on the calculator so that I can evaluate basic trigonometric expressions.
 
 e) The README.md file seems solid and helpful when one is figuring out how to use the program. They could have been more specific about what each of the files of code does.
 
@@ -19,7 +19,7 @@ f) Ant; no, there are no targets that need descriptions.
 
 g) Yes, there are more than enough issues that can earn us 1000 points. Yes, most of the issues seem to be clear in what they are asking for.
 
-h) We have not added any code as of yet so there are no additional issues.
+h) https://github.com/ucsb-cs56-projects/cs56-utilities-calculator/issues/65
 
 i) The code is organized to read through a user-inputted string (derived from the GUI of a keypad), looking at parentheses, decimal points, and different operators. Yes, the purposes of the classes and their methods are clear. Calculator.java and Keypad.java are more or less the primary classes, with Calculator doing most of the work. Yes, it is obvious how the two classes relate. The code is difficult to understand with certain methods, but it is otherwise clear. We would convey the append() method and the evaluate() method. 
 
