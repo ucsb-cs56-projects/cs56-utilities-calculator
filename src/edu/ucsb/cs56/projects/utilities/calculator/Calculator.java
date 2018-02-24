@@ -17,6 +17,7 @@ class Calculator {
     private boolean displayingResult;
     private JLabelMessageDestination display;
     private JLabelMessageDestination resultDisplay;
+    private double result;
     
     /**
      *  Constructor
@@ -31,6 +32,7 @@ class Calculator {
 	resultDisplay.append("Hello!");
 	refresh();
 	entry = "";
+	result = 0.0;
     }
     
     /**
@@ -76,6 +78,9 @@ class Calculator {
 	    else if (s.equals("(")){
 		entry += s;
 		parenCount++;
+	    }
+	    else if (s.equals("-")){
+		entry += s;
 	    }
 	    else
 		return;
@@ -208,7 +213,7 @@ class Calculator {
 	if(entry.length() == 0)
 	    return;
 	if(!isOperator(entry.substring(entry.length() - 1))){
-	    double result = evaluate(entry);
+	    result = evaluate(entry);
 	    displayResult(result);
 	}
     }
@@ -246,11 +251,51 @@ class Calculator {
 		values.push(Double.parseDouble(sbuf.toString()));
 	    } else if (curr == '(') {
                 ops.push(curr);
+		i++;
+                curr = expression.charAt(i);
+                if (curr == '-'){
+                    StringBuffer sbuf = new StringBuffer();
+                    sbuf.append(curr);
+                    i++;
+                    curr = expression.charAt(i);
+                    if ((curr >= '0' && curr <= '9') || curr == '.'){
+                        while(i < expression.length() && ((curr >= '0' && curr <= '9') || curr == '.')){
+                            sbuf.append(curr);
+                            i++;
+                            if (i < expression.length()) curr = expression.charAt(i);
+                        }
+                        if (i < expression.length()) i--;
+                        values.push(Double.parseDouble(sbuf.toString()));
+                    }
+                }
+                else{
+                    i--;
+                }
 	    } else if (isOperator(expression.substring(i,i+1))){
 		while (!ops.empty() && hasPrecedence(curr, ops.peek())){
                   values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 		}
                 ops.push(curr);
+		i++;
+		curr = expression.charAt(i);
+		if (curr == '-'){
+		    StringBuffer sbuf = new StringBuffer();
+		    sbuf.append(curr);
+		    i++;
+		    curr = expression.charAt(i);
+		    if ((curr >= '0' && curr <= '9') || curr == '.'){
+			while(i < expression.length() && ((curr >= '0' && curr <= '9') || curr == '.')){
+			    sbuf.append(curr);
+			    i++;
+			    if (i < expression.length()) curr = expression.charAt(i);
+			}
+			if (i < expression.length()) i--;
+			values.push(Double.parseDouble(sbuf.toString()));
+		    }
+		}
+		else{
+		    i--;
+		}
             } else if (curr == ')'){
                 while (ops.peek() != '(')
                   values.push(applyOp(ops.pop(), values.pop(), values.pop()));
@@ -295,6 +340,15 @@ class Calculator {
             return a / b;
         }
         return 0;
+    }
+
+
+    /**
+     *   Used to evaluate an expression in the form array of strings
+     */
+    public String getLeft(){
+	String answer = Double.toString(result);
+	return answer;
     }
     
     /**
