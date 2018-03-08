@@ -453,7 +453,7 @@ class Calculator {
 	/**
 	* Used to evaluate an expression in the form array of strings
 	*/
-	public String getLeft() {
+	public String getAnswer() {
 		String answer = Double.toString(result);
 		return answer;
 	}
