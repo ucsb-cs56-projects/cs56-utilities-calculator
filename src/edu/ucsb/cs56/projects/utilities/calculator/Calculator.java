@@ -17,6 +17,8 @@ class Calculator {
 	private JLabelMessageDestination display;
 	private JLabelMessageDestination resultDisplay;
 	private double result;
+	static final double negative = -1.0;
+	static final char multiply = '*';
     
 	/**
 	* Constructor
@@ -250,87 +252,55 @@ class Calculator {
 	public double evaluate(String expression) {
 		Stack<Double> values = new Stack<Double>();
 		Stack<Character> ops = new Stack<Character>();
-		for (int i = 0; i < expression.length(); i++) {
+		for (int i = new Integer(0); i < expression.length(); i++) {
 			char curr = expression.charAt(i);
+			StringBuffer sbuf = new StringBuffer();
 			if (i == 0 && curr == '-' && expression.length() > 1) {
 				if (curr == '-' && expression.charAt(i + 1) == '(') {
-					values.push(-1.0);
-					ops.push('*');
-					continue;
+					distributeNeg(values, ops);
 				}
-				StringBuffer sbuf = new StringBuffer();
-				sbuf.append(curr);
-				i++;
-				curr = expression.charAt(i);
-				if (isNumberOrDecimal(curr)) {
-					while(i < expression.length() && isNumberOrDecimal(curr)) {
-						sbuf.append(curr);
-						i++;
-						if (i < expression.length()) {
-							curr = expression.charAt(i);
-						}
-					}
-					if (i < expression.length()) {
-						i--;
-					}
-					values.push(Double.parseDouble(sbuf.toString()));
-				}
-			}
-			else if (isNumberOrDecimal(curr)) {
-				StringBuffer sbuf = new StringBuffer();
-				while (i < expression.length() && isNumberOrDecimal(curr)) {
-					sbuf.append(curr);
-					i++;
-					if(i < expression.length()) {
-						curr = expression.charAt(i);
-					}
-				}
-				if (i < expression.length()) {
-					i--;
-				}
-				values.push(Double.parseDouble(sbuf.toString()));
-			} 
-			else if (curr == '(') {
-				if (expression.charAt(i + 1) == '-' && expression.charAt(i + 2) == '(') {
-					ops.push('(');
-					values.push(-1.0);
-					ops.push('*');
-					i++;
-					continue;
-				}
-				if (i != 0) {
-					i--;
-					curr = expression.charAt(i);
-					if (curr >= '0' && curr <= '9') {
-						ops.push('*');
-					}
-					i++;
-				}
-				curr = expression.charAt(i);
-				ops.push(curr);
-				i++;
-				curr = expression.charAt(i);
-				if (curr == '-') {
-					StringBuffer sbuf = new StringBuffer();
+				else {
 					sbuf.append(curr);
 					i++;
 					curr = expression.charAt(i);
 					if (isNumberOrDecimal(curr)) {
-                        			while (i < expression.length() && isNumberOrDecimal(curr)){
-							sbuf.append(curr);
-							i++;
-							if (i < expression.length()) { 
-								curr = expression.charAt(i);
-							}
-						}
-						if (i < expression.length()) {
-							i--;
-						}
-						values.push(Double.parseDouble(sbuf.toString()));
+						i = getNumber(expression, curr, i, sbuf, values);
 					}
 				}
+			}
+			else if (isNumberOrDecimal(curr)) {
+				i = getNumber(expression, curr, i, sbuf, values);
+			} 
+			else if (curr == '(') {
+				if (expression.charAt(i + 1) == '-' && expression.charAt(i + 2) == '(') {
+					ops.push('(');
+					distributeNeg(values, ops);
+					i++;
+				}
 				else {
-					i--;
+					if (i != 0) {
+						i--;
+						curr = expression.charAt(i);
+						if (curr >= '0' && curr <= '9') {
+							ops.push(multiply);
+						}
+						i++;
+					}
+					curr = expression.charAt(i);
+					ops.push(curr);
+					i++;
+					curr = expression.charAt(i);
+					if (curr == '-') {
+						sbuf.append(curr);
+						i++;
+						curr = expression.charAt(i);
+						if (isNumberOrDecimal(curr)) {
+							i = getNumber(expression, curr, i, sbuf, values);
+						}
+					}
+					else {
+						i--;
+					}
 				}
 			}
 			else if (isOperator(expression.substring(i, i + 1))) {
@@ -340,41 +310,31 @@ class Calculator {
 				if (curr == '-' && expression.charAt(i + 1) == '(') {
 					if ((i > 0) && (expression.charAt(i - 1) >= '0' && expression.charAt(i - 1) <= '9')) {
 						ops.push(curr);
-						continue;
 					}
-					values.push(-1.0);
-					ops.push('*');
-					continue;
-				}
-				ops.push(curr);
-				i++;
-				curr = expression.charAt(i);
-				if (curr == '-') {
-					if (expression.charAt(i + 1) == '(') {
-						values.push(-1.0);
-						ops.push('*');
-						continue;
-					}
-					StringBuffer sbuf = new StringBuffer();
-					sbuf.append(curr);
-					i++;
-					curr = expression.charAt(i);
-					if (isNumberOrDecimal(curr)) {
-						while (i < expression.length() && isNumberOrDecimal(curr)) {
-							sbuf.append(curr);
-							i++;
-							if (i < expression.length()) {
-								curr = expression.charAt(i);
-							}
-						}
-						if (i < expression.length()) {
-							i--;
-						}
-						values.push(Double.parseDouble(sbuf.toString()));
+					else {
+						distributeNeg(values, ops);
 					}
 				}
 				else {
-					i--;
+					ops.push(curr);
+					i++;
+					curr = expression.charAt(i);
+					if (curr == '-') {
+						if (expression.charAt(i + 1) == '(') {
+							distributeNeg(values, ops);
+						}
+						else {
+							sbuf.append(curr);
+							i++;
+							curr = expression.charAt(i);
+							if (isNumberOrDecimal(curr)) {
+								i = getNumber(expression, curr, i, sbuf, values);
+							}
+						}
+					}
+					else {
+						i--;
+					}
 				}
 			} 
 			else if (curr == ')') {
@@ -386,10 +346,10 @@ class Calculator {
 					i++;
 					curr = expression.charAt(i);
 					if (isNumberOrDecimal(curr)) {
-						ops.push('*');
+						ops.push(multiply);
 					}
 					if (curr == '(') {
-						ops.push('*');
+						ops.push(multiply);
 					}
 					i--;
 				}
@@ -411,6 +371,32 @@ class Calculator {
 		else {
 			return false;
 		}
+	}
+
+	/**
+	* Multiplies a -1.0 onto the stacks
+	*/
+	public void distributeNeg(Stack<Double> v, Stack<Character> o) {
+		v.push(negative);
+		o.push(multiply);
+	}
+
+	/**
+	* Adds the full value onto the values stack, but returns the index
+	*/
+	public int getNumber(String expression, char current, int i, StringBuffer sbuf, Stack<Double> values) {
+		while (i < expression.length() && isNumberOrDecimal(current)) {
+			sbuf.append(current);
+			i++;
+			if (i < expression.length()) {
+				current = expression.charAt(i);
+			}
+		}
+		if (i < expression.length()) {
+			i--;
+		}
+		values.push(Double.parseDouble(sbuf.toString()));
+		return i;
 	}
 
 	/**
