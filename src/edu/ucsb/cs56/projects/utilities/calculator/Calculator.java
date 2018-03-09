@@ -151,7 +151,7 @@ class Calculator {
 			}
 		}
 	
-		// If we're on a closed parenthese
+		// If we're on a closed parenthesis
 		else if (entry.charAt(entry.length() - 1) == ')') {
 			if (isOperator(s)) {
 				entry += s;
@@ -252,7 +252,7 @@ class Calculator {
 	public double evaluate(String expression) {
 		Stack<Double> values = new Stack<Double>();
 		Stack<Character> ops = new Stack<Character>();
-		for (int i = new Integer(0); i < expression.length(); i++) {
+		for (int i = 0; i < expression.length(); i++) {
 			char curr = expression.charAt(i);
 			StringBuffer sbuf = new StringBuffer();
 			if (i == 0 && curr == '-' && expression.length() > 1) {
@@ -264,43 +264,23 @@ class Calculator {
 					i++;
 					curr = expression.charAt(i);
 					if (isNumberOrDecimal(curr)) {
-						i = getNumber(expression, curr, i, sbuf, values);
+						i = addNumberGetIndex(expression, curr, i, sbuf, values);
 					}
 				}
 			}
 			else if (isNumberOrDecimal(curr)) {
-				i = getNumber(expression, curr, i, sbuf, values);
+				i = addNumberGetIndex(expression, curr, i, sbuf, values);
 			} 
 			else if (curr == '(') {
+				checkForValueBeforeParenthesis(expression, curr, i, ops);
 				if (expression.charAt(i + 1) == '-' && expression.charAt(i + 2) == '(') {
-					ops.push('(');
+					ops.push(curr);
 					distributeNeg(values, ops);
 					i++;
 				}
 				else {
-					if (i != 0) {
-						i--;
-						curr = expression.charAt(i);
-						if (curr >= '0' && curr <= '9') {
-							ops.push(multiply);
-						}
-						i++;
-					}
-					curr = expression.charAt(i);
 					ops.push(curr);
-					i++;
-					curr = expression.charAt(i);
-					if (curr == '-') {
-						sbuf.append(curr);
-						i++;
-						curr = expression.charAt(i);
-						if (isNumberOrDecimal(curr)) {
-							i = getNumber(expression, curr, i, sbuf, values);
-						}
-					}
-					else {
-						i--;
-					}
+					i = checkNegValueAfterOpenParenthesis(expression, curr, i, sbuf, values);
 				}
 			}
 			else if (isOperator(expression.substring(i, i + 1))) {
@@ -308,29 +288,14 @@ class Calculator {
 					values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 				}
 				if (curr == '-' && expression.charAt(i + 1) == '(') {
-					if ((i > 0) && (expression.charAt(i - 1) >= '0' && expression.charAt(i - 1) <= '9')) {
-						ops.push(curr);
-					}
-					else {
-						distributeNeg(values, ops);
-					}
+					negBeforeOpenParenthesis(expression, curr, i, values, ops);
 				}
 				else {
 					ops.push(curr);
 					i++;
 					curr = expression.charAt(i);
 					if (curr == '-') {
-						if (expression.charAt(i + 1) == '(') {
-							distributeNeg(values, ops);
-						}
-						else {
-							sbuf.append(curr);
-							i++;
-							curr = expression.charAt(i);
-							if (isNumberOrDecimal(curr)) {
-								i = getNumber(expression, curr, i, sbuf, values);
-							}
-						}
+						i = negAfterOperator(expression, curr, i, sbuf, values, ops);
 					}
 					else {
 						i--;
@@ -338,27 +303,11 @@ class Calculator {
 				}
 			} 
 			else if (curr == ')') {
-				while (ops.peek() != '(') {
-					values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-                		}
-				ops.pop();
-				if (i < expression.length() - 1) {
-					i++;
-					curr = expression.charAt(i);
-					if (isNumberOrDecimal(curr)) {
-						ops.push(multiply);
-					}
-					if (curr == '(') {
-						ops.push(multiply);
-					}
-					i--;
-				}
+				operateParentheses(values, ops);
+				checkAfterClosedParenthesis(expression, curr, i, ops);
 			}
 		}
-		while (!ops.empty()) {
-			values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-		}
-		return values.pop();
+		return emptyStacks(values, ops);
 	}
 
 	/**
@@ -382,9 +331,9 @@ class Calculator {
 	}
 
 	/**
-	* Adds the full value onto the values stack, but returns the index
+	* Adds the full value onto the values stack and returns the new index after
 	*/
-	public int getNumber(String expression, char current, int i, StringBuffer sbuf, Stack<Double> values) {
+	public int addNumberGetIndex(String expression, char current, int i, StringBuffer sbuf, Stack<Double> values) {
 		while (i < expression.length() && isNumberOrDecimal(current)) {
 			sbuf.append(current);
 			i++;
@@ -396,6 +345,106 @@ class Calculator {
 			i--;
 		}
 		values.push(Double.parseDouble(sbuf.toString()));
+		return i;
+	}
+	
+	/**
+	* Empties all the stacks and returns the last value from the values stack
+	*/
+	public double emptyStacks(Stack<Double> values, Stack<Character> ops) {
+		while (!ops.empty()) {
+			values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+		}
+		return values.pop();
+	}
+
+	/**
+	* Operates everything inside of the parentheses
+	*/
+	public void operateParentheses(Stack<Double> values, Stack<Character> ops) {
+		while (ops.peek() != '(') {
+			values.push(applyOp(ops.pop(), values.pop(), values.pop()));
+		}
+		ops.pop();
+	}
+
+	/**
+	* Pushes a multiplication operator if there is a value next to an open parenthesis
+	*/
+	public void checkForValueBeforeParenthesis(String expression, char current, int i, Stack<Character> ops) {
+		if (i != 0) {
+			i--;
+			current = expression.charAt(i);
+			if (current >= '0' && current <= '9') {
+				ops.push(multiply);
+			}
+		}
+	}
+
+	/**
+	* Checks if there is a negative value right after an open parenthesis and returns the new index after
+	*/
+	public int checkNegValueAfterOpenParenthesis(String expression, char current, int i, StringBuffer sbuf, Stack<Double> values) {
+		i++;
+		current = expression.charAt(i);
+		if (current == '-') {
+			sbuf.append(current);
+			i++;
+			current = expression.charAt(i);
+			if (isNumberOrDecimal(current)) {
+				i = addNumberGetIndex(expression, current, i, sbuf, values);
+			}
+		}
+		else {
+			i--;
+		}
+		return i;
+	}
+
+	/**
+	* Inserts multiplication if there is a number or open parenthesis after closed parenthesis
+	*/
+	public void checkAfterClosedParenthesis(String expression, char current, int i, Stack<Character> ops) {
+		if (i < expression.length() - 1) {
+			i++;
+			current = expression.charAt(i);
+			if (isNumberOrDecimal(current)) {
+				ops.push(multiply);
+			}
+			if (current == '(') {
+				ops.push(multiply);
+			}
+			i--;
+		}
+	}
+
+	/**
+	* Determines whether to treat a negative as an operator or to multiply it
+	*/
+	public void negBeforeOpenParenthesis(String expression, char current, int i, Stack<Double> values, Stack<Character> ops) {
+		if ((i > 0) && (expression.charAt(i - 1) >= '0' && expression.charAt(i - 1) <= '9')) {
+			ops.push(current);
+		}
+		else {
+			distributeNeg(values, ops);
+		}
+	}
+
+	/**
+	* Determines whether to multiply the negative or treat it like a negative value and returns the new index after
+	*/
+	public int negAfterOperator(String expression, char current, int i, StringBuffer sbuf, Stack<Double> values, Stack<Character> ops) {
+		if (expression.charAt(i + 1) == '(') {
+			distributeNeg(values, ops);
+		}
+		else {
+			sbuf.append(current);
+			i++;
+			current = expression.charAt(i);
+			if (isNumberOrDecimal(current)) {
+				i = addNumberGetIndex(expression, current, i, sbuf, values);
+			}
+		}
 		return i;
 	}
 
