@@ -39,6 +39,7 @@ public class CalculatorTest {
     private final String[] test16 = {"(","-","2","9",")"};
     private final String[] test17 = {"-","(","5",")","(","(","6","+","2",")","-","-","1","0",")"};
     private final String[] test18 = {"5","(","-","(","1","+","2",")",")"};
+    private final String[] test19 = {"-","(","-","(","5","6","2",")",")"};
     // end instance variables
 
     public CalculatorTest() {
@@ -164,6 +165,12 @@ public class CalculatorTest {
     public void testImplicitAndNegativeBetweenParentheses() {
 	evaluateNoException(test18);
 	assertEquals(cal.getAnswer(),"-15.0");
+    }
+
+    @Test
+    public void testNegativeOutsideParentheses() {
+	evaluateNoException(test19);
+	assertEquals(cal.getAnswer(),"562.0");
     }
 
 } // CalculatorTest
