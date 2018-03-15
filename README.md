@@ -32,6 +32,8 @@ project history
  F16 | oshen 6pm | nediamond, oliverleifshen | More user-friendly, less buggy
 
  F17 | scottpchow23 | Justin-Nilsen, richawadaskar | A multi-operation, nested-expression-supporting calculator
+
+ W18 | scottpchow23 | Kyle-Ng, lukaskim321 | A negative operator supported calculator with implicit multiplication
 ``` 
 
 **F17 Final Remarks**
@@ -41,3 +43,7 @@ The implementation of the multi-operation and nested-expression features meant m
 *Files You Need to Look At:*  Calculator.java and Keypad.java.  The others are GUI stuff.  Unless you're really overhauling this project to try and one-up us, these are the only files you need to even look at. Basically, Keypad.java maps functions to buttons using lambda expressions.  The makeButton() method makes it easy to add new buttons with new operators with relatively little code.
 
 Calculator is where the real magic happens.  In particular, append() and evaluate() are going to be the methods you want to take a close look at.
+
+**W18 Final Remarks**
+
+The implementantion of negative operator support required the evaluate() function to be completely refactored. This also brought the creation of multiple helper functions to test each base case that arose from using the subtraction operator as a negative operator. Implicit multiplication is used for some of the negative operator base cases. If you are confused about how the evaluate() function works, look up the "Shunting Yard Algorithm." Trigonometric functions could be an interesting addition. Otherwise, we suggest trying to find a better way to parse the input as it is very difficult to trace at times. If not, the square root function and the exponent function definitely need work.
