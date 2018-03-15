@@ -32,6 +32,14 @@ public class CalculatorTest {
     private final String[] test9 = {"1",".",".","3","-",".",".","2"};
     private final String[] test10 = {"-","3","^","2"};
     private final String[] test11 = {"3","√","-","2","7"};
+    private final String[] test12 = {"4","*","-","2"};
+    private final String[] test13 = {"4","+","(","-","2",")"};
+    private final String[] test14 = {"4","+","-","(","3",")"};
+    private final String[] test15 = {"(","-","(","9",")",")"};
+    private final String[] test16 = {"(","-","2","9",")"};
+    private final String[] test17 = {"-","(","5",")","(","(","6","+","2",")","-","-","1","0",")"};
+    private final String[] test18 = {"5","(","-","(","1","+","2",")",")"};
+    private final String[] test19 = {"-","(","-","(","5","6","2",")",")"};
     // end instance variables
 
     public CalculatorTest() {
@@ -54,67 +62,115 @@ public class CalculatorTest {
     @Test
     public void testAddition() {
         evaluateNoException(test1);
-        assertEquals(cal.getLeft(),"47.0");
+        assertEquals(cal.getAnswer(),"47.0");
     }
 
-    /*@Test
+    @Test
     public void testSubtraction() {
         evaluateNoException(test2);
-        assertEquals(cal.getLeft(),"3.0");
-    }*/
+        assertEquals(cal.getAnswer(),"3.0");
+    }
 
     @Test
     public void testMultiplication() {
         evaluateNoException(test3);
-        assertEquals(cal.getLeft(),"66.8");
+        assertEquals(cal.getAnswer(),"66.8");
     }
 
     @Test
     public void testDivision() {
         evaluateNoException(test4);
-        assertEquals(cal.getLeft(),"40.0");
+        assertEquals(cal.getAnswer(),"40.0");
     }
 
     @Test
     public void testDelete() {
         evaluateNoException(test5);
-        assertEquals(cal.getLeft(),"60.0");
+        assertEquals(cal.getAnswer(),"60.0");
     }
 
     @Test
     public void testClear() {
         evaluateNoException(test6);
-        assertEquals(cal.getLeft(),"4.0");
+        assertEquals(cal.getAnswer(),"4.0");
     }
 
-    @Test
+    /*@Test
     public void testOperatorReplacement() {
         evaluateNoException(test7);
-        assertEquals(cal.getLeft(),"1111.0");
+        assertEquals(cal.getAnswer(),"1111.0");
     }
 
     @Test
     public void testDivisionByZero() {
         evaluateNoException(test8);
-        assertEquals(cal.getLeft(),"Infinity");
+        assertEquals(cal.getAnswer(),"Infinity");
     }
 
     @Test
     public void testMultipleDecimals() {
 	evaluateNoException(test9);
-	assertEquals(cal.getLeft(),"1.1");
+	assertEquals(cal.getAnswer(),"1.1");
     }
 
     @Test
     public void testPowerOf() {
 	evaluateNoException(test10);
-	assertEquals(cal.getLeft(),"-9.0");
+	assertEquals(cal.getAnswer(),"-9.0");
     }
 
-    /*@Test
+    @Test
     public void testRootOf() {
 	evaluateNoException(test11);
-	assertEquals(cal.getLeft(),"-3.0");
+	assertEquals(cal.getAnswer(),"-3.0");
     }*/
+
+    @Test
+    public void testNegativeNextToOperator() {
+	evaluateNoException(test12);
+	assertEquals(cal.getAnswer(),"-8.0");
+    }
+
+    @Test
+    public void testNegativeInParentheses() {
+	evaluateNoException(test13);
+	assertEquals(cal.getAnswer(),"2.0");
+    }
+
+    @Test
+    public void testNegativeAfterOperatorBeforeParentheses() {
+	evaluateNoException(test14);
+	assertEquals(cal.getAnswer(),"1.0");
+    }
+
+    @Test
+    public void testNegativeDistributingIntoParentheses() {
+	evaluateNoException(test15);
+	assertEquals(cal.getAnswer(),"-9.0");
+    }
+
+    @Test
+    public void testNegativeOnlyInParentheses() {
+	evaluateNoException(test16);
+	assertEquals(cal.getAnswer(),"-29.0");
+    }
+
+    @Test
+    public void testImplicitMultiplication() {
+	evaluateNoException(test17);
+	assertEquals(cal.getAnswer(),"-90.0");
+    }
+
+    @Test
+    public void testImplicitAndNegativeBetweenParentheses() {
+	evaluateNoException(test18);
+	assertEquals(cal.getAnswer(),"-15.0");
+    }
+
+    @Test
+    public void testNegativeOutsideParentheses() {
+	evaluateNoException(test19);
+	assertEquals(cal.getAnswer(),"562.0");
+    }
 
 } // CalculatorTest
