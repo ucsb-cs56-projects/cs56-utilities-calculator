@@ -3,6 +3,7 @@ package edu.ucsb.cs56.projects.utilities.calculator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.junit.Ignore;
 
 
 /**
@@ -95,35 +96,40 @@ public class CalculatorTest {
         assertEquals(cal.getAnswer(),"4.0");
     }
 
-    /*@Test
+    @Ignore
+    @Test
     public void testOperatorReplacement() {
         evaluateNoException(test7);
         assertEquals(cal.getAnswer(),"1111.0");
     }
 
+    @Ignore
     @Test
     public void testDivisionByZero() {
         evaluateNoException(test8);
         assertEquals(cal.getAnswer(),"Infinity");
     }
 
+    @Ignore
     @Test
     public void testMultipleDecimals() {
 	evaluateNoException(test9);
 	assertEquals(cal.getAnswer(),"1.1");
     }
 
+    @Ignore
     @Test
     public void testPowerOf() {
 	evaluateNoException(test10);
 	assertEquals(cal.getAnswer(),"-9.0");
     }
-
+    
+    @Ignore
     @Test
     public void testRootOf() {
 	evaluateNoException(test11);
 	assertEquals(cal.getAnswer(),"-3.0");
-    }*/
+    }
 
     @Test
     public void testNegativeNextToOperator() {
